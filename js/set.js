@@ -21,7 +21,7 @@ function getBgImg() {
 }
 
 var bg_img_preinstall = {
-    "type": "4", // 1:默认背景 2:每日一图 3:随机风景 4:随机动漫
+    "type": "1", // 1:默认背景 2:每日一图 3:随机风景 4:随机动漫
     "path": "", //自定义图片
 };
 
