@@ -350,7 +350,7 @@ window.addEventListener('load', function () {
             //移动端隐藏更多页面
             $('#container').attr('class', 'container');
             $("#change").html("Illuminated&nbsp;Side&nbsp;!");
-            $("#change1").html("Someday The Sun Will Shine All Its Rays Opon Our Troubled Lives");
+            $("#change1").html("Someday The Sun Will Shine All Its Rays On Our Troubled Lives");
 
             //移动端隐藏弹窗页面
             $('#box').css("display", "none");
@@ -402,14 +402,14 @@ color: rgb(244,167,89);
 let styleContent = `
 color: rgb(30,152,255);
 `
-let title1 = '無名の主页'
+let title1 = 'Severj的个人主页'
 let title2 = `
  _____ __  __  _______     ____     __
-|_   _|  \\/  |/ ____\\ \\   / /\\ \\   / /
-  | | | \\  / | (___  \\ \\_/ /  \\ \\_/ / 
-  | | | |\\/| |\\___ \\  \\   /    \\   /  
- _| |_| |  | |____) |  | |      | |   
-|_____|_|  |_|_____/   |_|      |_|                                                     
+|_   _|  \\/  |/ ____\\ \\   / /\\ \\   //
+  | | | \\  / | (___  \\ \\_/ /  \\ \\_// 
+  | | | |\\/| |\\___ \\  \\   /    \\  /  
+ _| |_| |  |  |____) |    | |       | |   
+|_____|_|  |_ |_____/     |_|      |_|                                                     
 `
 let content = `
 版 本 号：3.4
