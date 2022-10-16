@@ -187,11 +187,10 @@ main {
 .main-img img {
     border-radius: 50%;
     width: 120px;
+    opacity: 0.8;
+}
 }
 
-.main-img img:hover {
-    transform: rotate(360deg);
-}
 
 .img-title {
     width: 100%;
