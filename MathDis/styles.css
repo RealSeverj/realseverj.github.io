@@ -8,6 +8,20 @@
     --border-radius: 12px;
     --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* 颜色方案扩展 - 用于新增的分布 */
+    --geometric-primary: #ab2749;
+    --geometric-secondary: #ff6b6b;
+    --hyper-primary: #22577a;
+    --hyper-secondary: #64a2eb;
+    --normal-primary: #2d9596;
+    --normal-secondary: #9ad0d0;
+    --exp-primary: #d65d0e;
+    --exp-secondary: #ffad60;
+    --uniform-primary: #574b90;
+    --uniform-secondary: #826eae;
+    --bivariate-primary: #2c3e50;
+    --bivariate-secondary: #3498db;
 }
 
 * {
@@ -59,6 +73,33 @@ h1 {
     opacity: 0.9;
 }
 
+/* 分类标题样式 */
+.distribution-category {
+    margin-bottom: 60px;
+}
+
+.category-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.category-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--accent-color);
+    border-radius: 3px;
+}
+
 .content {
     display: flex;
     flex-wrap: wrap;
@@ -77,6 +118,17 @@ h1 {
     transition: var(--transition);
 }
 
+/* 宽卡片样式，用于二维分布 */
+.wide-card {
+    flex: 100%;
+    min-width: 100%;
+}
+
+/* 3D图表容器样式 */
+.3d-chart {
+    height: 400px;
+}
+
 .distribution-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
@@ -89,12 +141,38 @@ h1 {
     text-align: center;
 }
 
+/* 各分布卡片头部颜色 */
 .poisson .card-header {
     background: linear-gradient(45deg, #1a535c, #4ecdc4);
 }
 
 .binomial .card-header {
     background: linear-gradient(45deg, #6a0572, #ab83a1);
+}
+
+.geometric .card-header {
+    background: linear-gradient(45deg, var(--geometric-primary), var(--geometric-secondary));
+}
+
+.hypergeometric .card-header {
+    background: linear-gradient(45deg, var(--hyper-primary), var(--hyper-secondary));
+}
+
+.normal .card-header {
+    background: linear-gradient(45deg, var(--normal-primary), var(--normal-secondary));
+}
+
+.exponential .card-header {
+    background: linear-gradient(45deg, var(--exp-primary), var(--exp-secondary));
+}
+
+.uniform .card-header {
+    background: linear-gradient(45deg, var(--uniform-primary), var(--uniform-secondary));
+}
+
+.bivariate-normal .card-header,
+.bivariate-uniform .card-header {
+    background: linear-gradient(45deg, var(--bivariate-primary), var(--bivariate-secondary));
 }
 
 .card-header h2 {
@@ -185,12 +263,38 @@ h1 {
     background: var(--accent-color);
 }
 
+/* 各分布的滑块颜色 */
 .poisson .parameter-control input[type="range"]::-webkit-slider-thumb {
     background: #4ecdc4;
 }
 
 .binomial .parameter-control input[type="range"]::-webkit-slider-thumb {
     background: #ab83a1;
+}
+
+.geometric .parameter-control input[type="range"]::-webkit-slider-thumb {
+    background: var(--geometric-secondary);
+}
+
+.hypergeometric .parameter-control input[type="range"]::-webkit-slider-thumb {
+    background: var(--hyper-secondary);
+}
+
+.normal .parameter-control input[type="range"]::-webkit-slider-thumb {
+    background: var(--normal-secondary);
+}
+
+.exponential .parameter-control input[type="range"]::-webkit-slider-thumb {
+    background: var(--exp-secondary);
+}
+
+.uniform .parameter-control input[type="range"]::-webkit-slider-thumb {
+    background: var(--uniform-secondary);
+}
+
+.bivariate-normal .parameter-control input[type="range"]::-webkit-slider-thumb,
+.bivariate-uniform .parameter-control input[type="range"]::-webkit-slider-thumb {
+    background: var(--bivariate-secondary);
 }
 
 .parameter-control span {
@@ -207,6 +311,17 @@ h1 {
 
 .comparison-chart {
     height: 350px;
+}
+
+/* 3D图表样式 */
+.3d-chart {
+    height: 400px;
+}
+
+#bivariate-normal-plot,
+#bivariate-uniform-plot {
+    width: 100%;
+    height: 100%;
 }
 
 .stats {
@@ -234,6 +349,7 @@ h1 {
     color: var(--primary-color);
 }
 
+/* 各分布统计值颜色 */
 .poisson .stat-value {
     color: #1a535c;
 }
@@ -242,44 +358,65 @@ h1 {
     color: #6a0572;
 }
 
-.comparison {
-    background: var(--card-bg);
-    padding: 30px;
-    border-radius: var(--border-radius);
-    margin-bottom: 40px;
-    box-shadow: var(--box-shadow);
+.geometric .stat-value {
+    color: var(--geometric-primary);
 }
 
-.comparison h2 {
-    text-align: center;
-    margin-bottom: 15px;
-    font-family: 'Playfair Display', serif;
-    color: var(--primary-color);
+.hypergeometric .stat-value {
+    color: var(--hyper-primary);
 }
 
-.comparison p {
-    text-align: center;
-    margin-bottom: 30px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    color: #555;
-    line-height: 1.6;
+.normal .stat-value {
+    color: var(--normal-primary);
 }
 
-.comparison-controls {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
+.exponential .stat-value {
+    color: var(--exp-primary);
+}
+
+.uniform .stat-value {
+    color: var(--uniform-primary);
+}
+
+.bivariate-normal .stat-value,
+.bivariate-uniform .stat-value {
+    color: var(--bivariate-primary);
 }
 
 footer {
     text-align: center;
     padding: 20px;
+    margin-top: 40px;
     color: #777;
     font-size: 0.9rem;
+    border-top: 1px solid #eee;
 }
 
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.distribution-card {
+    animation: fadeInUp 0.8s ease backwards;
+}
+
+.distribution-category:nth-child(2) .distribution-card {
+    animation-delay: 0.2s;
+}
+
+.distribution-category:nth-child(3) .distribution-card {
+    animation-delay: 0.4s;
+}
+
+/* 响应式设计 */
 @media (max-width: 950px) {
     .content {
         flex-direction: column;
@@ -293,11 +430,42 @@ footer {
         font-size: 2.5rem;
     }
     
+    .category-title {
+        font-size: 1.8rem;
+    }
+    
     .formula {
         font-size: 1.1rem;
     }
     
     .parameter-control label {
         flex: 0 0 130px;
+    }
+    
+    .3d-chart {
+        height: 350px;
+    }
+}
+
+@media (max-width: 650px) {
+    .parameter-control label {
+        flex: 0 0 100%;
+        margin-bottom: 8px;
+    }
+    
+    .parameter-control input[type="range"] {
+        margin-left: 0;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .card-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .3d-chart {
+        height: 300px;
     }
 }

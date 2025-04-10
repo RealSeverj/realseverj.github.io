@@ -3,122 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>概率分布可视化 | 泊松分布与二项分布</title>
+    <title>概率分布可视化 | 多种概率分布</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>概率分布的优雅之舞</h1>
-            <p class="subtitle">探索泊松分布与二项分布的数学美</p>
+            <p class="subtitle">探索多种概率分布的数学美</p>
         </header>
 
-        <div class="content">
-            <div class="distribution-card poisson">
-                <div class="card-header">
-                    <h2>泊松分布</h2>
-                    <div class="formula">
-                        <span>P(X = k) = </span>
-                        <span class="fraction">
-                            <span class="numerator">e<sup>-λ</sup> · λ<sup>k</sup></span>
-                            <span class="denominator">k!</span>
-                        </span>
+        <div class="distribution-category">
+            <h2 class="category-title">离散概率分布</h2>
+            <div class="content">
+                <!-- 泊松分布 -->
+                <div class="distribution-card poisson">
+                    <div class="card-header">
+                        <h2>泊松分布</h2>
+                        <div class="formula">
+                            <span>P(X = k) = </span>
+                            <span class="fraction">
+                                <span class="numerator">e<sup>-λ</sup> · λ<sup>k</sup></span>
+                                <span class="denominator">k!</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>泊松分布描述了单位时间内随机事件发生的次数。它适用于事件独立发生且平均发生率恒定的情况。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="poisson-lambda">λ (平均发生率):</label>
+                                <input type="range" id="poisson-lambda" min="0.1" max="20" step="0.1" value="5">
+                                <span id="poisson-lambda-value">5.0</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="poisson-max-k">最大 k 值:</label>
+                                <input type="range" id="poisson-max-k" min="10" max="40" step="1" value="20">
+                                <span id="poisson-max-k-value">20</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="poisson-chart"></canvas>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">期望值 (E[X]):</span>
+                                <span class="stat-value" id="poisson-mean">5</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">方差 (Var[X]):</span>
+                                <span class="stat-value" id="poisson-variance">5</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="description">
-                        <p>泊松分布描述了单位时间内随机事件发生的次数。它适用于事件独立发生且平均发生率恒定的情况。</p>
-                    </div>
-                    <div class="controls">
-                        <div class="parameter-control">
-                            <label for="poisson-lambda">λ (平均发生率):</label>
-                            <input type="range" id="poisson-lambda" min="0.1" max="20" step="0.1" value="5">
-                            <span id="poisson-lambda-value">5.0</span>
-                        </div>
-                        <div class="parameter-control">
-                            <label for="poisson-max-k">最大 k 值:</label>
-                            <input type="range" id="poisson-max-k" min="10" max="40" step="1" value="20">
-                            <span id="poisson-max-k-value">20</span>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="poisson-chart"></canvas>
-                    </div>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="stat-label">期望值 (E[X]):</span>
-                            <span class="stat-value" id="poisson-mean">5</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">方差 (Var[X]):</span>
-                            <span class="stat-value" id="poisson-variance">5</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="distribution-card binomial">
-                <div class="card-header">
-                    <h2>二项分布</h2>
-                    <div class="formula">
-                        <span>P(X = k) = </span>
-                        <span class="combination">C(n,k)</span>
-                        <span>· p<sup>k</sup> · (1-p)<sup>n-k</sup></span>
+                <!-- 二项分布 -->
+                <div class="distribution-card binomial">
+                    <div class="card-header">
+                        <h2>二项分布</h2>
+                        <div class="formula">
+                            <span>P(X = k) = </span>
+                            <span class="combination">C(n,k)</span>
+                            <span>· p<sup>k</sup> · (1-p)<sup>n-k</sup></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>二项分布描述了n次独立重复试验中成功k次的概率，每次试验成功的概率为p。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="binomial-n">n (试验次数):</label>
+                                <input type="range" id="binomial-n" min="1" max="50" step="1" value="20">
+                                <span id="binomial-n-value">20</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="binomial-p">p (成功概率):</label>
+                                <input type="range" id="binomial-p" min="0.01" max="0.99" step="0.01" value="0.5">
+                                <span id="binomial-p-value">0.50</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="binomial-chart"></canvas>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">期望值 (E[X]):</span>
+                                <span class="stat-value" id="binomial-mean">10</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">方差 (Var[X]):</span>
+                                <span class="stat-value" id="binomial-variance">5</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="description">
-                        <p>二项分布描述了n次独立重复试验中成功k次的概率，每次试验成功的概率为p。</p>
-                    </div>
-                    <div class="controls">
-                        <div class="parameter-control">
-                            <label for="binomial-n">n (试验次数):</label>
-                            <input type="range" id="binomial-n" min="1" max="50" step="1" value="20">
-                            <span id="binomial-n-value">20</span>
-                        </div>
-                        <div class="parameter-control">
-                            <label for="binomial-p">p (成功概率):</label>
-                            <input type="range" id="binomial-p" min="0.01" max="0.99" step="0.01" value="0.5">
-                            <span id="binomial-p-value">0.50</span>
+
+                <!-- 几何分布 -->
+                <div class="distribution-card geometric">
+                    <div class="card-header">
+                        <h2>几何分布</h2>
+                        <div class="formula">
+                            <span>P(X = k) = (1-p)<sup>k-1</sup> · p</span>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="binomial-chart"></canvas>
-                    </div>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <span class="stat-label">期望值 (E[X]):</span>
-                            <span class="stat-value" id="binomial-mean">10</span>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>几何分布描述了在伯努利试验序列中，首次成功所需要的试验次数。当首次成功出现在第k次试验时，前k-1次试验均失败。</p>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-label">方差 (Var[X]):</span>
-                            <span class="stat-value" id="binomial-variance">5</span>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="geometric-p">p (成功概率):</label>
+                                <input type="range" id="geometric-p" min="0.01" max="0.99" step="0.01" value="0.3">
+                                <span id="geometric-p-value">0.30</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="geometric-max-k">最大 k 值:</label>
+                                <input type="range" id="geometric-max-k" min="5" max="30" step="1" value="15">
+                                <span id="geometric-max-k-value">15</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="geometric-chart"></canvas>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">期望值 (E[X]):</span>
+                                <span class="stat-value" id="geometric-mean">3.33</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">方差 (Var[X]):</span>
+                                <span class="stat-value" id="geometric-variance">7.78</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 超几何分布 -->
+                <div class="distribution-card hypergeometric">
+                    <div class="card-header">
+                        <h2>超几何分布</h2>
+                        <div class="formula">
+                            <span>P(X = k) = </span>
+                            <span class="fraction">
+                                <span class="numerator">C(K,k) · C(N-K,n-k)</span>
+                                <span class="denominator">C(N,n)</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>超几何分布描述了从N个物体（其中K个为特定类型）中无放回抽取n个物体，其中特定类型物体的数量。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="hyper-N">N (总体大小):</label>
+                                <input type="range" id="hyper-N" min="10" max="100" step="1" value="50">
+                                <span id="hyper-N-value">50</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="hyper-K">K (特定类型数):</label>
+                                <input type="range" id="hyper-K" min="1" max="49" step="1" value="20">
+                                <span id="hyper-K-value">20</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="hyper-n">n (样本大小):</label>
+                                <input type="range" id="hyper-n" min="1" max="49" step="1" value="10">
+                                <span id="hyper-n-value">10</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="hypergeometric-chart"></canvas>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">期望值 (E[X]):</span>
+                                <span class="stat-value" id="hyper-mean">4</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">方差 (Var[X]):</span>
+                                <span class="stat-value" id="hyper-variance">1.5</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="comparison">
-            <h2>分布对比</h2>
-            <p>当二项分布的n很大且p很小时，泊松分布可以近似二项分布。当n→∞, p→0，且np=λ保持不变时，二项分布趋近于泊松分布。</p>
-            <div class="chart-container comparison-chart">
-                <canvas id="comparison-chart"></canvas>
+        <div class="distribution-category">
+            <h2 class="category-title">连续概率分布</h2>
+            <div class="content">
+                <!-- 正态分布 -->
+                <div class="distribution-card normal">
+                    <div class="card-header">
+                        <h2>正态分布</h2>
+                        <div class="formula">
+                            <span>f(x) = </span>
+                            <span class="fraction">
+                                <span class="numerator">1</span>
+                                <span class="denominator">σ√2π</span>
+                            </span>
+                            <span>e<sup>-(x-μ)<sup>2</sup>/2σ<sup>2</sup></sup></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>正态分布是一种连续概率分布，在统计学和自然科学中应用广泛。它通常被称为"钟形曲线"或"高斯分布"。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="normal-mu">μ (均值):</label>
+                                <input type="range" id="normal-mu" min="-10" max="10" step="0.5" value="0">
+                                <span id="normal-mu-value">0</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="normal-sigma">σ (标准差):</label>
+                                <input type="range" id="normal-sigma" min="0.1" max="5" step="0.1" value="1">
+                                <span id="normal-sigma-value">1.0</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="normal-chart"></canvas>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">期望值 (E[X]):</span>
+                                <span class="stat-value" id="normal-mean">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">方差 (Var[X]):</span>
+                                <span class="stat-value" id="normal-variance">1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 指数分布 -->
+                <div class="distribution-card exponential">
+                    <div class="card-header">
+                        <h2>指数分布</h2>
+                        <div class="formula">
+                            <span>f(x) = λe<sup>-λx</sup>, x ≥ 0</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>指数分布描述了独立事件发生的时间间隔。它是描述泊松过程中事件之间等待时间的概率分布。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="exp-lambda">λ (速率参数):</label>
+                                <input type="range" id="exp-lambda" min="0.1" max="5" step="0.1" value="1">
+                                <span id="exp-lambda-value">1.0</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="exponential-chart"></canvas>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">期望值 (E[X]):</span>
+                                <span class="stat-value" id="exp-mean">1</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">方差 (Var[X]):</span>
+                                <span class="stat-value" id="exp-variance">1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 均匀分布 -->
+                <div class="distribution-card uniform">
+                    <div class="card-header">
+                        <h2>均匀分布</h2>
+                        <div class="formula">
+                            <span>f(x) = </span>
+                            <span class="fraction">
+                                <span class="numerator">1</span>
+                                <span class="denominator">b-a</span>
+                            </span>
+                            <span>, a ≤ x ≤ b</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>均匀分布是一种在有限区间中每一点出现概率相等的概率分布。它是随机数生成器的基础。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="uniform-a">a (下限):</label>
+                                <input type="range" id="uniform-a" min="-10" max="9" step="0.5" value="0">
+                                <span id="uniform-a-value">0</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="uniform-b">b (上限):</label>
+                                <input type="range" id="uniform-b" min="-9" max="10" step="0.5" value="1">
+                                <span id="uniform-b-value">1.0</span>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="uniform-chart"></canvas>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">期望值 (E[X]):</span>
+                                <span class="stat-value" id="uniform-mean">0.5</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">方差 (Var[X]):</span>
+                                <span class="stat-value" id="uniform-variance">0.08</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="controls comparison-controls">
-                <div class="parameter-control">
-                    <label for="comparison-lambda">λ 值 (泊松参数):</label>
-                    <input type="range" id="comparison-lambda" min="0.1" max="20" step="0.1" value="10">
-                    <span id="comparison-lambda-value">10.0</span>
+        </div>
+
+        <div class="distribution-category">
+            <h2 class="category-title">二维概率分布</h2>
+            <div class="content">
+                <!-- 二维正态分布 -->
+                <div class="distribution-card bivariate-normal wide-card">
+                    <div class="card-header">
+                        <h2>二维正态分布</h2>
+                        <div class="formula">
+                            <span>f(x,y) = </span>
+                            <span class="fraction">
+                                <span class="numerator">1</span>
+                                <span class="denominator">2πσ<sub>x</sub>σ<sub>y</sub>√(1-ρ<sup>2</sup>)</span>
+                            </span>
+                            <span>e<sup>-z/2</sup></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>二维正态分布是多变量正态分布的特例，描述了两个变量之间的联合概率分布，参数包括均值向量和协方差矩阵。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="bivariate-rho">ρ (相关系数):</label>
+                                <input type="range" id="bivariate-rho" min="-0.99" max="0.99" step="0.01" value="0">
+                                <span id="bivariate-rho-value">0.00</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="bivariate-sigma-x">σ<sub>x</sub>:</label>
+                                <input type="range" id="bivariate-sigma-x" min="0.1" max="3" step="0.1" value="1">
+                                <span id="bivariate-sigma-x-value">1.0</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="bivariate-sigma-y">σ<sub>y</sub>:</label>
+                                <input type="range" id="bivariate-sigma-y" min="0.1" max="3" step="0.1" value="1">
+                                <span id="bivariate-sigma-y-value">1.0</span>
+                            </div>
+                        </div>
+                        <div class="chart-container 3d-chart">
+                            <div id="bivariate-normal-plot"></div>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">协方差:</span>
+                                <span class="stat-value" id="bivariate-covariance">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 二维均匀分布 -->
+                <div class="distribution-card bivariate-uniform wide-card">
+                    <div class="card-header">
+                        <h2>二维均匀分布</h2>
+                        <div class="formula">
+                            <span>f(x,y) = </span>
+                            <span class="fraction">
+                                <span class="numerator">1</span>
+                                <span class="denominator">(b-a)(d-c)</span>
+                            </span>
+                            <span>, a≤x≤b, c≤y≤d</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="description">
+                            <p>二维均匀分布是一维均匀分布的扩展，它描述了在二维矩形区域内每点的概率密度相等的分布。</p>
+                        </div>
+                        <div class="controls">
+                            <div class="parameter-control">
+                                <label for="bivariate-uniform-x-range">x 范围:</label>
+                                <input type="range" id="bivariate-uniform-x-range" min="1" max="10" step="1" value="5">
+                                <span id="bivariate-uniform-x-range-value">5</span>
+                            </div>
+                            <div class="parameter-control">
+                                <label for="bivariate-uniform-y-range">y 范围:</label>
+                                <input type="range" id="bivariate-uniform-y-range" min="1" max="10" step="1" value="5">
+                                <span id="bivariate-uniform-y-range-value">5</span>
+                            </div>
+                        </div>
+                        <div class="chart-container 3d-chart">
+                            <div id="bivariate-uniform-plot"></div>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-label">体积:</span>
+                                <span class="stat-value" id="bivariate-uniform-volume">25</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <footer>
-            <p>概率分布可视化 &copy; 2025 | 由 Chart.js 与 Math.js 强力驱动</p>
+            <p>概率分布可视化 &copy; 2025 | 由 Chart.js、Math.js 与 Plotly.js 强力驱动</p>
         </footer>
     </div>
 
