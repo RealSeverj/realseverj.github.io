@@ -1,0 +1,33 @@
+{
+  "sections": [
+    {
+      "id": "site",
+      "badge": "Site",
+      "title": "站点入口",
+      "description": "常用入口与独立页面，集中在此。",
+      "links": [
+        { "label": "主页（旧版）", "href": "/", "emoji": "🏠", "description": "保留入口", "highlight": true },
+        { "label": "缓存分析 CacheWhat", "href": "/components/CacheWhat/", "emoji": "🗄️", "description": "CacheWhat" },
+        { "label": "数学演示 MathDis", "href": "/components/MathDis/", "emoji": "➗", "description": "Math Dis" },
+        { "label": "图形数学 MathwithGraph", "href": "/components/MathwithGraph/", "emoji": "📈", "description": "Math with Graph" },
+        { "label": "音乐播放 MusiGrace", "href": "/components/MusiGrace/", "emoji": "🎼", "description": "MusiGrace" },
+        { "label": "音乐解锁 MusicUnlock", "href": "/components/MusicUnlock/", "emoji": "🔓", "description": "Music Unlock" },
+        { "label": "导航页", "href": "/components/Navfore/", "emoji": "🧭", "description": "Navfore" },
+        { "label": "翻译器", "href": "/components/TransToWhat/", "emoji": "🧪", "description": "TransToWhat" },
+        { "label": "博客", "href": "https://www.cnblogs.com/Severj", "emoji": "📝", "description": "外部博客" },
+        { "label": "公众号", "href": "https://mp.weixin.qq.com/s/KeUQrukPCCm_neH55cQb9A?token=466519641&lang=zh_CN", "emoji": "📖", "description": "微信公众号文章" }
+      ]
+    },
+    {
+      "id": "friends",
+      "badge": "Friends",
+      "title": "我的朋友们",
+      "description": "仍沿用原有链接能力，仅视觉和交互全面焕新。",
+      "links": [
+        { "label": "Lemon", "href": "/components/MyFriends/lemon/", "emoji": "🍋", "description": "友链页" },
+        { "label": "Nightstart", "href": "/components/MyFriends/nightstart/", "emoji": "🌌", "description": "友链页" },
+        { "label": "Shire", "href": "/components/MyFriends/shire/", "emoji": "🌿", "description": "友链页" }
+      ]
+    }
+  ]
+}
