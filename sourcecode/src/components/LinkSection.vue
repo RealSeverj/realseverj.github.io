@@ -14,6 +14,7 @@
         :label="link.label"
         :href="link.href"
         :emoji="link.emoji"
+        :image="link.image"
         :description="link.description"
         :highlight="link.highlight"
         :intercept="shouldIntercept(link.href)"
@@ -73,7 +74,7 @@ function shouldIntercept(href) {
   border: 1px solid rgba(118, 143, 234, 0.18);
   background: rgba(18, 24, 48, 0.48);
   backdrop-filter: blur(18px);
-  box-shadow: 0 24px 60px rgba(8, 12, 28, 0.45);
+  box-shadow: 0 12px 24px rgba(8, 12, 28, 0.45);
   transition: transform 240ms ease, box-shadow 240ms ease;
 }
 
@@ -83,7 +84,7 @@ function shouldIntercept(href) {
 
 .link-section:hover {
   transform: translateY(-4px);
-  box-shadow: 0 30px 80px rgba(12, 18, 36, 0.55);
+  box-shadow: 0 12px 30px rgba(12, 18, 36, 0.55);
 }
 
 .link-section__header {

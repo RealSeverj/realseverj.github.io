@@ -1,0 +1,43 @@
+const e=`[00:12.92]Wait for me  等等我
+[00:14.23]I'm not far behind  我还没有远远落后于你
+[00:16.62]I know that i can change  我知道我能够做出改变
+[00:19.20]Remembering  仍然记得
+[00:20.82]All of those nights  所有的夜晚
+[00:22.89]Beneath the window frame  在窗框之下
+[00:25.47]Don't know why  不知为何
+[00:28.59]We keep going round and round in the same place  我们一直在同一个地方重蹈覆辙
+[00:31.85]Can't decide  无法做出抉择
+[00:34.85]To live my life on the ground or in outer space  究竟是要生活在地面 还是生活在遥远的星河
+[00:37.90]Memories  记忆
+[00:41.40]Keep me waiting for you  让我在这里等待着你
+[00:43.02]Keep me waiting for you  让我在此地等待着你
+[00:44.30]Leave with me  跟我一起远走高飞吧
+[00:47.89]To the stars above I think I'm ready for you  让我们飞向天空中的繁星 我已经为你做好了准备
+[00:54.27]Keep me waiting for you  我一直在这里等待着你
+[00:55.75]Keep me waiting for you  我一直在这里等待着你
+[01:00.61]To the stars above I think I'm ready for you  让我们飞向天空中的繁星 我已经为你做好了准备
+[01:42.49]Wait for me  等等我
+[01:43.79]I'm not far behind  我还没有远远落后于你
+[01:46.27]I know that i can change  我知道我能够做出改变
+[01:48.80]Remembering  仍然记得
+[01:50.03]All of those nights  所有的夜晚
+[01:50.38]Beneath the window frame  在窗框之下
+[01:55.00]Don't know why  不知为何
+[01:58.21]We keep going round and round in the same place  我们一直在同一个地方重蹈覆辙
+[02:01.33]Can't decide  无法做出抉择
+[02:04.50]To live my life on the ground or in outer space  究竟是要生活在地面 还是生活在遥远的星河
+[02:07.49]Memories  记忆
+[02:10.93]Keep me waiting for you  让我在这里等待着你
+[02:12.57]Keep me waiting for you  让我在这里等待着你
+[02:13.89]Leave with me  跟我一起远走高飞吧
+[02:17.33]To the stars above I think I'm ready for you  让我们飞向天空中的繁星 我已经为你做好了准备
+[02:23.81]Keep me waiting for you  我一直在这里等待着你
+[02:25.45]Keep me waiting for you  我一直在这里等待着你
+[02:30.23]To the stars above I think I'm ready for you  让我们飞向天空中的繁星 我已经为你做好了准备
+[02:59.09]Keep me waiting for you  我一直在这里等待着你
+[03:00.66]Keep me waiting for you  我一直在这里等待着你
+[03:02.21]Keep me waiting for you  我一直在这里等待着你
+[03:03.78]Keep me waiting for you  我一直在这里等待着你
+[03:05.35]Keep me waiting for you  我一直在这里等待着你
+[03:06.96]Keep me waiting for you  我一直在这里等待着你
+[03:08.68]To the stars above I think I'm ready for you  让我们飞向天空中的繁星 我已经为你做好了准备`;export{e as default};

@@ -4,9 +4,8 @@
       "id": "site",
       "badge": "Site",
       "title": "站点入口",
-      "description": "常用入口与独立页面，集中在此。",
+      "description": "常用入口与独立页面，集中在此",
       "links": [
-        { "label": "主页（旧版）", "href": "/", "emoji": "🏠", "description": "保留入口", "highlight": true },
         { "label": "缓存分析 CacheWhat", "href": "/components/CacheWhat/", "emoji": "🗄️", "description": "CacheWhat" },
         { "label": "数学演示 MathDis", "href": "/components/MathDis/", "emoji": "➗", "description": "Math Dis" },
         { "label": "图形数学 MathwithGraph", "href": "/components/MathwithGraph/", "emoji": "📈", "description": "Math with Graph" },
@@ -22,11 +21,27 @@
       "id": "friends",
       "badge": "Friends",
       "title": "我的朋友们",
-      "description": "仍沿用原有链接能力，仅视觉和交互全面焕新。",
+      "description": "为好朋友们编写的纪念页面",
       "links": [
-        { "label": "Lemon", "href": "/components/MyFriends/lemon/", "emoji": "🍋", "description": "友链页" },
-        { "label": "Nightstart", "href": "/components/MyFriends/nightstart/", "emoji": "🌌", "description": "友链页" },
-        { "label": "Shire", "href": "/components/MyFriends/shire/", "emoji": "🌿", "description": "友链页" }
+        { "label": "Afffections", "href": "/components/MyFriends/rose/", "image": "img/1.jpg", "description": "蔷薇", "highlight": true },
+        { "label": "Lemon", "href": "/components/MyFriends/lemon/", "image": "img/2.jpg", "description": "纱雾柠檬" },
+        { "label": "Nightstart", "href": "/components/MyFriends/nightstart/", "image": "img/3.jpg", "description": "夜初"},
+        { "label": "Shire", "href": "/components/MyFriends/shire/", "image": "img/4.jpg", "description": "夏尔" }
+      ]
+    },
+    {
+      "id": "articles",
+      "badge": "Articles",
+      "title": "精选文章",
+      "description": "技术分享与个人思考",
+      "links": [
+        {
+          "title": "面向FZU——如何在VSCode中使用fzuasm",
+          "description": "福州大学汇编语言编译器fzuasm的安装与使用指南",
+          "href": "https://www.cnblogs.com/Severj/p/18737211",
+          "date": "2025-2-25",
+          "category": "校园生活"
+        }
       ]
     }
   ]

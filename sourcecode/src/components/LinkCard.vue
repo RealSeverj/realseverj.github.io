@@ -8,7 +8,10 @@
     @click="onClick"
   >
     <div class="link-card__inner">
-      <div class="link-card__emoji" aria-hidden="true">{{ emoji }}</div>
+      <div class="link-card__emoji" aria-hidden="true">
+        <img v-if="imageSrc" class="link-card__img" :src="imageSrc" alt="" />
+        <template v-else>{{ emoji }}</template>
+      </div>
       <div class="link-card__content">
         <div class="link-card__title">{{ label }}</div>
         <div v-if="description" class="link-card__desc">{{ description }}</div>
@@ -31,6 +34,7 @@ const props = defineProps({
   label: { type: String, required: true },
   href: { type: String, required: true },
   emoji: { type: String, default: '🔗' },
+  image: { type: String, default: '' },
   description: { type: String, default: '' },
   highlight: { type: Boolean, default: false },
   intercept: { type: Boolean, default: false }
@@ -38,6 +42,14 @@ const props = defineProps({
 
 const isExternal = computed(() => /^(http|https):\/\//i.test(props.href))
 const emit = defineEmits(['open'])
+
+// Resolve image if provided (supports public directory paths or absolute URLs)
+const imageSrc = computed(() => {
+  if (!props.image) return ''
+  if (/^https?:\/\//i.test(props.image)) return props.image
+  if (props.image.startsWith('/')) return props.image
+  return `/${props.image}`
+})
 
 function onClick(e) {
   if (props.intercept) {
@@ -109,6 +121,13 @@ function onClick(e) {
   font-size: 22px;
   background: radial-gradient(100% 100% at 40% 30%, rgba(250, 251, 255, 0.22) 0%, rgba(140, 163, 255, 0.15) 100%);
   border: 1px solid rgba(167, 186, 255, 0.2);
+}
+
+.link-card__img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .link-card__content { min-width: 0; }

@@ -17,13 +17,13 @@
         </div>
       </header>
       <div class="content" :aria-busy="loading">
-        <div v-if="loading || blocked" class="overlay" aria-live="polite">
-          <div v-if="loading" class="loader">
+        <div v-if="loading" class="overlay" aria-live="polite">
+          <div class="loader">
             <div class="spinner"></div>
             <div class="tip">正在加载页面…</div>
           </div>
-          <div v-else class="blocked">
-            <p>目标站点不允许在 iframe 中加载（可能设置了 X-Frame-Options 或 CSP）。</p>
+          <div v-if="blocked" class="blocked">
+            <p>加载时间较长，可能是服务器响应慢，或目标站点不允许在 iframe 中加载。</p>
             <a class="open-tab" :href="src" target="_blank" rel="noreferrer">在新标签打开 ↗</a>
           </div>
         </div>

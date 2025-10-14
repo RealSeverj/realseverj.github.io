@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蔷薇</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: url('assets/background.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            overflow-x: hidden;
+            position: relative;
+            transition: background-image 2s ease-in-out;
+        }
+
+        body.switched {
+            background-image: url('assets/paroles.jpg');
+        }
+
+        .main-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .replies-section {
+            min-height: 100vh;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            position: relative; /* ensure ::before is within stacking context */
+        }
+
+        .timer-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .main-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+            pointer-events: none; /* don't block interactions */
+        }
+
+        .avatar, .title, .subtitle, .scroll-hint {
+            position: relative;
+            z-index: 2;
+        }
+
+        .replies-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            pointer-events: none; /* don't block interactions */
+        }
+
+        .reply-card {
+            position: relative;
+            z-index: 2;
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: url('assets/1.jpg') no-repeat center center;
+            background-size: cover;
+            margin-bottom: 20px;
+            animation: fadeInUp 2s ease-out;
+        }
+
+        .title {
+            font-size: 2em;
+            text-align: center;
+            animation: fadeInUp 3s ease-out;
+            animation-delay: 1s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            text-align: center;
+            margin-top: 10px;
+            animation: fadeInUp 3s ease-out;
+            animation-delay: 2s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reply-card {
+            max-width: 600px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reply-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reply-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .reply-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: url('assets/2.jpg') no-repeat center center;
+            background-size: cover;
+            margin-right: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .reply-info {
+            flex: 1;
+        }
+
+        .reply-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .reply-article {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .reply-content {
+            font-size: 1.2em;
+            line-height: 1.6;
+            font-style: italic;
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeIn 2s ease-out 4s forwards, bounce 2s ease-in-out 6s infinite;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        .timer-section {
+            position: absolute;
+            bottom: 60px;
+            left: 60px;
+            text-align: left;
+            opacity: 0;
+            transition: opacity 1.5s ease-out;
+            z-index: 3; /* above section overlays */
+        }
+
+        .timer-section.visible {
+            opacity: 1;
+        }
+
+        .timer-date {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .timer-display {
+            font-size: 3em;
+            font-weight: 200;
+            color: #ffffff;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+
+        .timer-unit {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .timer-number {
+            font-size: 1em;
+            font-weight: 300;
+        }
+
+        .timer-label {
+            font-size: 0.4em;
+            opacity: 0.7;
+            margin-left: 5px;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .timer-section {
+                bottom: 40px;
+                left: 30px;
+            }
+            
+            .timer-display {
+                font-size: 2em;
+            }
+            
+            .timer-unit {
+                margin-right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-section">
+        <div class="avatar"></div>
+        <div class="title">愿与你同撑一伞之下</div>
+        <div class="subtitle">For 蔷薇</div>
+        <div class="scroll-hint">↓ 滑动查看更多 ↓</div>
+    </div>
+
+    <div class="replies-section">
+        <div class="reply-card">
+            <div class="reply-header">
+                <div class="reply-avatar"></div>
+                <div class="reply-info">
+                    <div class="reply-name">蔷薇</div>
+                    <div class="reply-article">回复《乡》 2025.7.21</div>
+                </div>
+            </div>
+            <div class="reply-content">
+                "每一次你的字里有雨，我就跟着淋漓"
+            </div>
+        </div>
+
+        <div class="reply-card">
+            <div class="reply-header">
+                <div class="reply-avatar"></div>
+                <div class="reply-info">
+                    <div class="reply-name">蔷薇</div>
+                    <div class="reply-article">回复《鸟儿》 2025.6.16</div>
+                </div>
+            </div>
+            <div class="reply-content">
+                "有些鸟儿是注定不会被关在牢笼里的，它们的每一片羽毛都闪耀着自由的光辉"
+            </div>
+        </div>
+
+        <div class="reply-card">
+            <div class="reply-header">
+                <div class="reply-avatar"></div>
+                <div class="reply-info">
+                    <div class="reply-name">蔷薇</div>
+                    <div class="reply-article">回复《你到底想要什么》 2024.9.4</div>
+                </div>
+            </div>
+            <div class="reply-content">
+                "我也想知道这个答案"
+            </div>
+        </div>
+    </div>
+
+    <div class="timer-page">
+        <div class="timer-section">
+            <div class="timer-date">2025.06.27 23:44</div>
+            <div class="timer-display" id="timer"></div>
+        </div>
+    </div>
+
+    <script>
+        // 计时器功能
+        function updateTimer() {
+            const startDate = new Date('2025-06-27T23:44:00');
+            const now = new Date();
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const timerElement = document.getElementById('timer');
+            if (timerElement) {
+                timerElement.innerHTML = `
+                    <span class="timer-unit">
+                        <span class="timer-number">${days}</span>
+                        <span class="timer-label">天</span>
+                    </span>
+                    <span class="timer-unit">
+                        <span class="timer-number">${String(hours).padStart(2, '0')}</span>
+                        <span class="timer-label">时</span>
+                    </span>
+                    <span class="timer-unit">
+                        <span class="timer-number">${String(minutes).padStart(2, '0')}</span>
+                        <span class="timer-label">分</span>
+                    </span>
+                    <span class="timer-unit">
+                        <span class="timer-number">${String(seconds).padStart(2, '0')}</span>
+                        <span class="timer-label">秒</span>
+                    </span>
+                `;
+            }
+        }
+
+        // 每秒更新计时器
+        setInterval(updateTimer, 1000);
+        updateTimer(); // 立即执行一次
+
+        // 自动滚动功能
+        setTimeout(() => {
+            window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            });
+        }, 5000); // 5秒后自动滚动
+
+        // 背景切换和元素显示控制
+        function handleBackgroundSwitch() {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            // 双向背景切换：当滚动超过1.5屏时切换到paroles.jpg，否则使用background.jpg
+            if (scrollY > windowHeight * 1.5) {
+                document.body.classList.add('switched');
+            } else {
+                document.body.classList.remove('switched');
+            }
+        }
+
+        // 使用 IntersectionObserver 优雅触发可见性
+        function setupVisibilityObserver() {
+            const elements = document.querySelectorAll('.reply-card, .timer-section');
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.25 });
+
+                elements.forEach(el => observer.observe(el));
+            } else {
+                // 回退方案
+                function fallback() {
+                    elements.forEach(element => {
+                        const rect = element.getBoundingClientRect();
+                        if (rect.top < window.innerHeight * 0.8) {
+                            element.classList.add('visible');
+                        }
+                    });
+                }
+                window.addEventListener('scroll', fallback);
+                window.addEventListener('load', fallback);
+                fallback();
+            }
+        }
+
+        window.addEventListener('scroll', handleBackgroundSwitch);
+        window.addEventListener('load', () => {
+            handleBackgroundSwitch();
+            setupVisibilityObserver();
+        });
+    </script>
+</body>
+</html>
