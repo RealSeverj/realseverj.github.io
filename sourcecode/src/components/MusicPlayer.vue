@@ -111,7 +111,11 @@
               <div class="item-title">{{ track.title }}</div>
               <div class="item-artist">{{ track.artist }}</div>
             </div>
-            <div class="item-duration">{{ formatTime(track.duration) }}</div>
+            <div class="item-duration" aria-hidden="true" title="播放">
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path fill="currentColor" d="M9 6l6 6-6 6z"/>
+              </svg>
+            </div>
             <svg v-if="currentIndex === index && isPlaying" class="item-playing" viewBox="0 0 24 24" width="16" height="16">
               <path fill="currentColor" d="M4 10h2v4H4v-4zm4-3h2v10H8V7zm4 5h2v4h-2v-4zm4-8h2v18h-2V4z"/>
             </svg>
@@ -120,7 +124,7 @@
       </div>
     </div>
 
-    <audio ref="audioRef" @timeupdate="handleTimeUpdate" @loadedmetadata="handleLoadedMetadata" @ended="handleEnded"></audio>
+  <audio ref="audioRef" preload="none" @timeupdate="handleTimeUpdate" @loadedmetadata="handleLoadedMetadata" @ended="handleEnded"></audio>
   </div>
 </template>
 
@@ -229,72 +233,47 @@ async function loadLyric(musicPath) {
 }
 
 async function extractMetadata(audioUrl, filePath) {
+  // 仅负责读取封面/标签等详细信息；时长交由 audio 的 loadedmetadata 事件回填
   const fileName = filePath.split('/').pop().replace(/\.(mp3|flac|wav|ogg)$/i, '')
-  
-  try {
-    
-    // 使用 audioRef 创建临时 audio 元素来获取时长
-    const tempAudio = new Audio(audioUrl)
-    
-    // 等待元数据加载
-    const duration = await new Promise((resolve) => {
-      tempAudio.addEventListener('loadedmetadata', () => {
-        resolve(tempAudio.duration)
-      })
-      tempAudio.addEventListener('error', () => {
-        resolve(0)
-      })
-      tempAudio.load()
-    })
-    
-    // 获取封面和其他元数据
-    let cover = ''
-    let title = fileName
-    let artist = '未知艺术家'
-    let album = ''
-    
-    try {
-      // 确保 Buffer 可用（关键修复点）
-      await ensureBuffer()
 
-      const res = await fetch(audioUrl)
-      const blob = await res.blob()
-      const meta = await parseBlob(blob)
-      const { common } = meta || {}
-      
-      if (common) {
-        title = common.title || fileName
-        artist = common.artist || '未知艺术家'
-        album = common.album || ''
-        
-        if (common.picture?.length) {
-          const pic = common.picture[0]
-          const coverBlob = new Blob([pic.data], { type: pic.format || 'image/jpeg' })
-          cover = URL.createObjectURL(coverBlob)
-          createdObjectUrls.push(cover)
-        }
-      }
-    } catch (metaError) {
-      console.warn('无法读取音频标签，使用文件名:', metaError)
-      // 尝试从文件名解析艺术家和标题
-      const parts = fileName.split(' - ')
-      if (parts.length >= 2) {
-        artist = parts[0].trim()
-        title = parts.slice(1).join(' - ').trim()
+  let title = fileName
+  let artist = '未知艺术家'
+  let album = ''
+  let cover = ''
+
+  try {
+    // 确保 Buffer 可用（music-metadata-browser 依赖）
+    await ensureBuffer()
+
+    // 仅请求前 512KB，足以读取大多数文件的标签
+    const res = await fetch(audioUrl, { headers: { Range: 'bytes=0-512143' } })
+    const blob = await res.blob()
+    const meta = await parseBlob(blob)
+    const { common } = meta || {}
+
+    if (common) {
+      title = common.title || fileName
+      artist = common.artist || '未知艺术家'
+      album = common.album || ''
+
+      if (common.picture?.length) {
+        const pic = common.picture[0]
+        const coverBlob = new Blob([pic.data], { type: pic.format || 'image/jpeg' })
+        cover = URL.createObjectURL(coverBlob)
+        createdObjectUrls.push(cover)
       }
     }
-    
-    return { title, artist, album, duration, cover }
-  } catch (e) {
-    console.error('提取元数据失败:', e)
-    return { 
-      title: fileName, 
-      artist: '未知艺术家', 
-      album: '', 
-      duration: 0, 
-      cover: '' 
+  } catch (metaError) {
+    console.warn('无法读取音频标签，使用文件名:', metaError)
+    // 尝试从文件名解析艺术家和标题
+    const parts = fileName.split(' - ')
+    if (parts.length >= 2) {
+      artist = parts[0].trim()
+      title = parts.slice(1).join(' - ').trim()
     }
   }
+
+  return { title, artist, album, cover }
 }
 
 async function initPlaylist() {
@@ -303,28 +282,70 @@ async function initPlaylist() {
     console.warn('未找到音乐文件')
     return
   }
-  const tracks = await Promise.all(musicFiles.map(async (path) => {
-    const mod = await musicModules[path]()
-    const url = mod.default
-    const meta = await extractMetadata(url, path)
-    return { url, path, ...meta }
-  }))
-  playlist.value = tracks
-  if (tracks.length > 0) loadTrack(0)
+  // 初始化仅使用文件名，避免任何网络请求
+  playlist.value = musicFiles.map((path) => {
+    const fileName = path.split('/').pop() || ''
+    const base = fileName.replace(/\.(mp3|flac|wav|ogg)$/i, '')
+    let title = base
+    let artist = '未知艺术家'
+    const parts = base.split(' - ')
+    if (parts.length >= 2) {
+      artist = parts[0].trim()
+      title = parts.slice(1).join(' - ').trim()
+    }
+    return {
+      url: '',
+      path,
+      title,
+      artist,
+      album: '',
+      duration: 0,
+      cover: ''
+    }
+  })
+
+  // 不在初始化阶段选择任何曲目，避免产生网络请求；等待用户点击
+  // 现在改为：为了改善首次点击播放体验，预加载第 1 首的元数据（仅 metadata，不自动播放）
+  if (playlist.value.length > 0) {
+    await loadTrack(0)
+  }
 }
 
 async function loadTrack(index) {
   if (index < 0 || index >= playlist.value.length) return
   currentIndex.value = index
-  currentTrack.value = playlist.value[index]
-  if (audioRef.value) {
-    audioRef.value.src = currentTrack.value.url
+  const track = playlist.value[index]
+
+  // 懒解析资源地址
+  if (!track.url && musicModules[track.path]) {
+    const mod = await musicModules[track.path]()
+    track.url = mod.default
+  }
+
+  currentTrack.value = track
+
+  if (audioRef.value && track.url) {
+    // 仅加载元数据，避免立即下载音频主体
+    audioRef.value.preload = 'metadata'
+    audioRef.value.src = track.url
     audioRef.value.load()
     isPlaying.value = false
     currentTime.value = 0
-    duration.value = currentTrack.value.duration || 0
+    duration.value = track.duration || 0
   }
-  await loadLyric(currentTrack.value.path)
+
+  // 懒加载详细元数据（封面/标签等，仅对当前曲目）
+  if (track.url) {
+    const meta = await extractMetadata(track.url, track.path)
+    // 将元数据写回列表项
+    Object.assign(track, meta)
+    // 如果仍是当前曲目，同步展示信息
+    if (currentIndex.value === index) {
+      currentTrack.value = { ...track }
+    }
+  }
+
+  await loadLyric(track.path)
 }
 
 async function playTrack(index) {
@@ -387,7 +408,14 @@ function handleTimeUpdate() {
   }
 }
 function handleLoadedMetadata() {
-  if (audioRef.value) duration.value = audioRef.value.duration || duration.value
+  if (audioRef.value) {
+    duration.value = audioRef.value.duration || duration.value
+    // 回填到当前播放条目，便于在列表显示时长
+    const i = currentIndex.value
+    if (playlist.value[i]) {
+      playlist.value[i].duration = duration.value || 0
+    }
+  }
 }
 function handleEnded() {
   if (loopMode.value === 'one') {
@@ -533,7 +561,7 @@ onUnmounted(() => {
 .volume-control { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
 .volume-slider { width: 80px; }
 .volume-slider input[type="range"] {
-  width: 100%; height: 4px; background: rgba(130, 156, 248, 0.2); border-radius: 2px; outline: none; -webkit-appearance: none;
+  width: 100%; height: 4px; background: rgba(130, 156, 248, 0.2); border-radius: 2px; outline: none; -webkit-appearance: none; appearance: none;
 }
 .volume-slider input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none; width: 12px; height: 12px; background: rgba(226, 234, 255, 0.95);
@@ -604,7 +632,7 @@ onUnmounted(() => {
 .item-info { flex: 1; min-width: 0; }
 .item-title { font-size: 0.9rem; color: rgba(226, 234, 255, 0.9); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item-artist { font-size: 0.8rem; color: rgba(198, 206, 240, 0.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
-.item-duration { font-size: 0.85rem; color: rgba(198, 206, 240, 0.6); font-variant-numeric: tabular-nums; }
+.item-duration { display: flex; align-items: center; justify-content: center; width: 20px; color: rgba(198, 206, 240, 0.7); }
 .item-playing { color: rgba(118, 255, 214, 0.9); animation: pulse 1.5s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 

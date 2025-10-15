@@ -23,10 +23,8 @@ const handleMouseMove = (e) => {
     target.style.setProperty('--myi', `${y}%`)
 }
 
-// 壁纸：使用 Vite 的 glob 导入 10 张图片，按文件名顺序排列
-const modules = import.meta.glob('./assets/img/background*.webp', { import: 'default' })
-const images = Object.keys(modules)
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+// 壁纸：从 public/img 读取 10 张图片（/img/background1.webp ... /img/background10.webp）
+const images = Array.from({ length: 10 }, (_, i) => `/img/background${i + 1}.webp`)
 
 const currentIndex = ref(0)
 const selectedImage = ref('')
@@ -39,13 +37,8 @@ async function loadCurrentImage() {
     }
     
     const imagePath = images[currentIndex.value % images.length]
-    try {
-        const module = await modules[imagePath]()
-        selectedImage.value = module
-    } catch (error) {
-        console.error('Failed to load image:', imagePath, error)
-        selectedImage.value = wallpaper.image || ''
-    }
+    // public 资源可直接使用路径，预加载与失败回退逻辑在 BackgroundStage 中处理
+    selectedImage.value = imagePath
 }
 
 function pickRandomIndex() {
