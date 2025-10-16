@@ -36,11 +36,39 @@
       "description": "技术分享与个人思考",
       "links": [
         {
+          "title": "高考十日记 | 5.31",
+          "description": "我的高考日记之一",
+          "href": "https://mp.weixin.qq.com/s/8bdonbf9Ke2Pd0IH8Yy6fQ",
+          "date": "2024-3-14",
+          "category": "校园生活"
+        },
+        {
+          "title": "996，灵与肉",
+          "description": "大一暑假时的一些思考",
+          "href": "https://mp.weixin.qq.com/s/x4snX8QJAMHyUu6a5d3b8w",
+          "date": "2024-7-14",
+          "category": "校园生活"
+        },
+        {
+          "title": "Never Ending Tales",
+          "description": "2025春节期间各种思绪的杂烩",
+          "href": "https://mp.weixin.qq.com/s/wu9_v_bNzOaACv1c0w3kiw",
+          "date": "2025-1-31",
+          "category": "校园生活"
+        },
+        {
           "title": "面向FZU——如何在VSCode中使用fzuasm",
           "description": "福州大学汇编语言编译器fzuasm的安装与使用指南",
           "href": "https://www.cnblogs.com/Severj/p/18737211",
           "date": "2025-2-25",
           "category": "校园生活"
+        },
+        {
+          "title": "纪行·延平",
+          "description": "一次突发奇想前往延平的旅记",
+          "href": "https://mp.weixin.qq.com/s/qhOlQhVJF4wCoukxPHHqqw",
+          "date": "2025-5-11",
+          "category": "旅记"
         }
       ]
     }
