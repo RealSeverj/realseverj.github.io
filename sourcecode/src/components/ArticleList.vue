@@ -96,7 +96,6 @@ onMounted(async () => {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(8, 12, 28, 0.4);
   margin-top: 1rem;
 }
 
