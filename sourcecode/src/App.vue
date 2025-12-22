@@ -152,7 +152,7 @@ onUnmounted(() => {
 
         <footer class="footer" aria-label="Footer">
             <div class="footer__inner">
-                <span>© {{ new Date().getFullYear() }} Severj.top</span>
+                <span>© {{ new Date().getFullYear() }} Severj.top &nbsp;&nbsp; 闽ICP备2025122655号</span>
                 <a href="/" class="footer__link">回到旧版</a>
             </div>
         </footer>
