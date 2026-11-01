@@ -36,6 +36,27 @@
       "description": "技术分享与个人思考",
       "links": [
         {
+          "title": "失去结果的世界",
+          "description": "AI快速发展之下，对个人才华、科研与自我价值的思考",
+          "href": "https://mp.weixin.qq.com/s/bgKydW2P-1EFOOYCZyjdZA",
+          "date": "2026-10-16",
+          "category": "随笔"
+        },
+        {
+          "title": "岛",
+          "description": "重访东壁岛，在海风、夏日与旧时记忆中回望成长",
+          "href": "https://mp.weixin.qq.com/s/mHYABEoLJYzClDDnRIIeYw",
+          "date": "2026-04-04",
+          "category": "旅记"
+        },
+        {
+          "title": "鸟儿",
+          "description": "从童年的麻雀到校园里的雨燕，关于陪伴、生命与自由的回忆",
+          "href": "https://mp.weixin.qq.com/s/7Keqi_-OKYqGZ4DJRC9I2w",
+          "date": "2025-06-15",
+          "category": "随笔"
+        },
+        {
           "title": "高考十日记 | 5.31",
           "description": "我的高考日记之一",
           "href": "https://mp.weixin.qq.com/s/8bdonbf9Ke2Pd0IH8Yy6fQ",

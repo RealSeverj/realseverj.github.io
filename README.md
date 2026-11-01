@@ -44,27 +44,30 @@
 - 在线访问：将本仓库托管到 GitHub Pages 即可直接访问根目录的 [index.html](index.html)
 - 本地开发（新首页/Vue 工程）
   1. 进入 sourcecode 目录
-  2. 按 Vite 默认流程安装与启动（需本地 Node 环境）
+  2. 安装与启动（需要 Node.js 22.12+，推荐 Node.js 24 LTS）
   
 ````sh
 # 进入源码目录
 cd sourcecode
 
 # 安装依赖（任选包管器）
-npm install
+npm ci
 # or: pnpm install / yarn
 
 # 启动开发服务
 npm run dev
 
-# 构建产物（会输出到上层根目录的 /assets 与 index.html 所需的静态资源）
+# 只构建到 sourcecode/dist，不启动服务器
 npm run build
+
+# 构建并同步到仓库根目录，供 GitHub Pages 使用
+npm run deploy
 ````
 - 本地预览静态站点（含 SPA 回退）
   
 ````sh
 # 在仓库根目录执行
-node local-server.mjs -r . -p 5500
+npm --prefix sourcecode run serve:root
 # 打开 http://127.0.0.1:5500
 ````
 

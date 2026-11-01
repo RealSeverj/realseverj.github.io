@@ -11,7 +11,7 @@
       <LinkCard
         v-for="link in links"
         :key="link.href"
-        :label="link.label"
+        :label="link.label || link.title"
         :href="link.href"
         :emoji="link.emoji"
         :image="link.image"

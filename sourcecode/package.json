@@ -3,23 +3,25 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "postbuild": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/deploy.ps1",
+    "test": "node --test",
     "preview": "vite preview",
-    "deploy": "npm run build",
+    "sync:root": "node ./scripts/deploy.mjs",
+    "deploy": "npm run build && npm run sync:root",
     "serve:root": "node ./scripts/local-server.mjs -r .. -H 127.0.0.1 -p 5500",
-    "deploy:serve": "npm run build && powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/deploy.ps1"
+    "deploy:serve": "npm run deploy && npm run serve:root"
   },
   "dependencies": {
-    "aplayer": "^1.10.1",
-    "buffer": "^6.0.3",
-    "music-metadata-browser": "^2.5.11",
-    "vue": "^3.5.22"
+    "music-metadata": "^12.3.3",
+    "vue": "^3.5.44"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.1",
-    "vite": "^7.1.7"
+    "@vitejs/plugin-vue": "^6.0.10",
+    "vite": "^8.3.5"
   }
 }

@@ -130,14 +130,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { parseBlob } from 'music-metadata-browser'
-
-async function ensureBuffer() {
-  if (typeof window !== 'undefined' && !window.Buffer) {
-    const { Buffer } = await import('buffer')
-    window.Buffer = Buffer
-  }
-}
+import { parseBlob } from 'music-metadata'
 
 const audioRef = ref(null)
 const lyricsRef = ref(null)
@@ -242,11 +235,9 @@ async function extractMetadata(audioUrl, filePath) {
   let cover = ''
 
   try {
-    // 确保 Buffer 可用（music-metadata-browser 依赖）
-    await ensureBuffer()
-
     // 仅请求前 512KB，足以读取大多数文件的标签
     const res = await fetch(audioUrl, { headers: { Range: 'bytes=0-512143' } })
+    if (!res.ok) throw new Error(`音频标签请求失败: ${res.status}`)
     const blob = await res.blob()
     const meta = await parseBlob(blob)
     const { common } = meta || {}
