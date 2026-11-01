@@ -152,7 +152,10 @@ onUnmounted(() => {
 
         <footer class="footer" aria-label="Footer">
             <div class="footer__inner">
-                <span>© {{ new Date().getFullYear() }} Severj.top &nbsp;&nbsp; 闽ICP备2025122655号</span>
+                <span>
+                    © {{ new Date().getFullYear() }} Severj.top &nbsp;&nbsp;
+                    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer__link">闽ICP备2025122655号</a>
+                </span>
                 <a href="/" class="footer__link">回到旧版</a>
             </div>
         </footer>
