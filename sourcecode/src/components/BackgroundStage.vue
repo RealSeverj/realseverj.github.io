@@ -1,10 +1,11 @@
 <template>
-  <div class="background-stage" role="presentation">
+  <div class="background-stage" role="presentation" :style="{ '--wallpaper-blur': `${blur}px` }">
     <div class="background-gradient"></div>
     <transition name="bgfade" mode="in-out">
       <div :key="displayedImage || 'noimg'" class="background-image" :class="{ 'background-image--hidden': !displayedImage, 'background-image--loaded': imageLoaded, 'background-image--animate': imageLoaded }" :style="imageStyle"></div>
     </transition>
     <div class="background-overlay"></div>
+    <div v-if="hasOverlay" class="background-tint" :style="{ background: overlay }"></div>
     <div class="background-glow">
       <span v-for="dot in dots" :key="dot" class="glow-dot"></span>
     </div>
@@ -25,11 +26,14 @@ const props = defineProps({
   },
   overlay: {
     type: String,
-    default: 'rgba(6, 10, 26, 0.62)'
+    default: 'rgba(var(--scrim-rgb), 0.62)'
   }
 })
 
 const dots = Array.from({ length: 12 }, (_, index) => index)
+
+// overlay 为 'transparent' 时视为不额外压暗，允许只靠 .background-overlay 的渐变
+const hasOverlay = computed(() => Boolean(props.overlay) && props.overlay !== 'transparent')
 
 // 当前正在显示的图片 URL（只有预加载成功后才会切换到这里）
 const displayedImage = ref('')
@@ -60,7 +64,6 @@ watch(
     img.onerror = () => {
       if (token === loadToken) {
         // 加载失败则不切换，保持旧图
-        // 可根据需要回退到纯背景：displayedImage.value = ''
         imageLoaded.value = true
       }
     }
@@ -70,8 +73,7 @@ watch(
 )
 
 const imageStyle = computed(() => {
-  // 由于采用预加载，显示时即为“已加载”，一般不需要额外模糊
-  const style = { filter: 'none' }
+  const style = {}
   if (displayedImage.value) {
     style.backgroundImage = `url(${displayedImage.value})`
   }
@@ -90,29 +92,26 @@ const imageStyle = computed(() => {
 .background-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 120% at 85% 10%, rgba(135, 206, 250, 0.4) 0%, transparent 55%),
-    radial-gradient(80% 80% at 20% 20%, rgba(173, 216, 230, 0.35) 0%, transparent 60%),
-    radial-gradient(75% 75% at 50% 85%, rgba(70, 130, 180, 0.32) 0%, transparent 60%),
-    #191a1b;
-  transform: scale(1.1);
-  filter: saturate(120%);
+  background: radial-gradient(100% 100% at 50% 20%, rgba(26, 36, 62, 0.45) 0%, rgba(8, 12, 22, 0.85) 100%), #0a0d18;
+  transform: scale(1.05);
 }
 
 .background-image {
   position: absolute;
-  inset: -5%;
+  inset: -4%;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
   opacity: 0;
-  transition: opacity 600ms ease;
+  transition: opacity 700ms ease;
   will-change: transform, opacity;
   contain: paint;
   transform: translateZ(0);
+  filter: blur(var(--wallpaper-blur, 0px));
 }
 
 .background-image--loaded {
-  opacity: 0.45;
+  opacity: 0.72;
 }
 
 .background-image--hidden {
@@ -122,7 +121,13 @@ const imageStyle = computed(() => {
 .background-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(3, 7, 17, 0.85) 0%, rgba(3, 7, 17, 0.4) 45%, rgba(3, 7, 17, 0.85) 100%);
+  background: radial-gradient(ellipse at 50% 30%, rgba(10, 14, 26, 0.25) 0%, rgba(6, 9, 18, 0.55) 100%);
+}
+
+.background-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .background-glow {
@@ -131,7 +136,7 @@ const imageStyle = computed(() => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16vh;
-  transform: rotate(-8deg);
+  transform: rotate(-6deg);
   pointer-events: none;
 }
 
@@ -139,14 +144,14 @@ const imageStyle = computed(() => {
   width: 22vh;
   height: 22vh;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
   animation: pulse 9s ease-in-out infinite;
-  opacity: 0.4;
+  opacity: 0.35;
 }
 
 .glow-dot:nth-child(odd) {
   animation-delay: 2.4s;
-  opacity: 0.28;
+  opacity: 0.22;
 }
 
 .glow-dot:nth-child(even) {
@@ -155,16 +160,16 @@ const imageStyle = computed(() => {
 
 @keyframes pulse {
   0%, 100% {
-    transform: scale(0.85) translate3d(0, 0, 0);
-    opacity: 0.2;
+    transform: scale(0.9) translate3d(0, 0, 0);
+    opacity: 0.18;
   }
   40% {
-    transform: scale(1.2) translate3d(0, -12%, 0);
-    opacity: 0.45;
+    transform: scale(1.15) translate3d(0, -10%, 0);
+    opacity: 0.4;
   }
   70% {
-    transform: scale(1) translate3d(0, 8%, 0);
-    opacity: 0.35;
+    transform: scale(1) translate3d(0, 6%, 0);
+    opacity: 0.3;
   }
 }
 
@@ -186,10 +191,9 @@ const imageStyle = computed(() => {
 .background-image--animate { animation: kenburns 24s ease-in-out infinite alternate; }
 @keyframes kenburns {
   0% { transform: scale(1) translate3d(0,0,0); }
-  100% { transform: scale(1.06) translate3d(0, -1.5%, 0); }
+  100% { transform: scale(1.05) translate3d(0, -1.2%, 0); }
 }
 
-/* 系统偏好减少动效时，关闭动画以降功耗 */
 @media (prefers-reduced-motion: reduce) {
   .background-image--animate { animation: none !important; }
   .glow-dot { animation: none !important; }

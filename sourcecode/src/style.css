@@ -1,39 +1,45 @@
-:root {
-  --bg: #050817;
-  --fg: rgba(233, 240, 255, 0.96);
-  --muted: rgba(198, 209, 245, 0.75);
-  --card: rgba(18, 24, 48, 0.48);
-  --border: rgba(118, 143, 234, 0.18);
-  --accent1: #8167ff;
-  --accent2: #46e2c4;
-
-  color-scheme: dark;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* 全局基础样式：只放 reset、排版基线与工具类，设计变量见 ./styles/tokens.css */
 
 * { box-sizing: border-box; }
 
 html, body { height: 100%; }
 
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font: 16px/1.6 var(--font-sans);
 }
 
 a { color: inherit; text-decoration: none; }
 
-:focus-visible { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
+button { font: inherit; color: inherit; }
 
-/* 优化滚动条（仅支持的浏览器） */
+img { max-width: 100%; }
+
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+::selection {
+  background: rgba(118, 255, 214, 0.28);
+  color: var(--fg-strong);
+}
+
+/* 优化滚动条（仅支持的浏览器；主内容与侧栏用 .scrollbar-hidden 单独处理） */
 *::-webkit-scrollbar { width: 10px; height: 10px; }
-*::-webkit-scrollbar-thumb { background: rgba(120, 140, 210, .3); border-radius: 999px; }
+*::-webkit-scrollbar-thumb { background: rgba(120, 140, 210, 0.3); border-radius: var(--radius-pill); }
 *::-webkit-scrollbar-track { background: transparent; }
 
 /* 小工具类 */
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

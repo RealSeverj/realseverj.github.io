@@ -1,4 +1,4 @@
-import { cp, lstat, mkdir, readdir, realpath, rm } from 'node:fs/promises'
+import { cp, lstat, mkdir, readdir, readFile, realpath, rm } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -12,6 +12,29 @@ const index = await lstat(path.join(dist, 'index.html'))
 const assets = await lstat(path.join(dist, 'assets'))
 if (!index.isFile() || !assets.isDirectory() || assets.isSymbolicLink()) {
   throw new Error('Build output is incomplete. Run npm run build first.')
+}
+
+// 首页引用的每个 /assets/* 都必须在本次构建里真实存在，
+// 否则复制出去的 index.html 会指向不存在的文件（线上白屏）。
+const indexHtml = await readFile(path.join(dist, 'index.html'), 'utf8')
+const referenced = [
+  ...indexHtml.matchAll(/(?:src|href)="(\/assets\/[^"?#]+)[^"]*"/g),
+].map(match => match[1])
+
+if (referenced.length === 0) {
+  throw new Error('dist/index.html does not reference any built asset.')
+}
+
+const missing = []
+for (const reference of new Set(referenced)) {
+  const file = path.join(dist, reference.replace(/^\//, ''))
+  const stat = await lstat(file).catch(() => null)
+  if (!stat || !stat.isFile()) missing.push(reference)
+}
+if (missing.length > 0) {
+  throw new Error(
+    `dist/index.html references missing assets:\n${missing.map(item => `  ${item}`).join('\n')}`,
+  )
 }
 
 // 只清理仓库根目录的构建资源；拒绝符号链接和指向其他目录的路径。
@@ -40,4 +63,4 @@ for (const entry of await readdir(dist, { withFileTypes: true })) {
 
 // 资源复制成功后再更新首页引用。
 await cp(path.join(dist, 'index.html'), path.join(repoRoot, 'index.html'))
-console.log(`Build synchronized to ${repoRoot}`)
+console.log(`Build synchronized to ${repoRoot} (${new Set(referenced).size} assets checked)`)

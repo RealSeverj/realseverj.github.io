@@ -1,0 +1,1 @@
+var e=`/assets/MitiS_%20Crystal%20Skies_%20Monika%20Santucci%20-%20Wait-BuGO_28S.mp3`;export{e as default};

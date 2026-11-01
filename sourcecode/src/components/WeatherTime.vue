@@ -1,5 +1,5 @@
 <template>
-  <div class="weather-time">
+  <div class="weather-time surface">
     <div class="time-display">
       <div class="date-line">
         {{ dateText }}
@@ -10,7 +10,7 @@
     
     <div v-if="weather" class="weather-display">
       <div class="weather-main">
-        <i :class="weatherIcon" class="weather-icon"></i>
+        <WeatherIcon :name="weatherIconName" class="weather-icon" />
         <span class="weather-text">{{ weather.weather }}</span>
         <span class="temperature">{{ weather.temperature }}°C</span>
       </div>
@@ -27,7 +27,7 @@
     </div>
     
     <div v-else-if="error" class="weather-error" @click="retryWeather">
-      <i class="fa-solid fa-circle-exclamation"></i>
+      <WeatherIcon name="alert" class="weather-icon weather-icon--alert" />
       <span>{{ error }}</span>
       <span class="retry-hint">(点击重试)</span>
     </div>
@@ -35,194 +35,56 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import WeatherIcon from './WeatherIcon.vue'
+import { useClock } from '../composables/useClock'
+import { useWeather } from '../composables/useWeather'
 
-// 配置项 - 用户需要填入自己的高德 API Key
-const AMAP_KEY = '19a90f1c901dec314ac2c40ced3031a0'
-
-const now = ref(new Date())
-const weather = ref(null)
-const loading = ref(true)
-const error = ref('')
-const adcode = ref('')
-
-// 时间格式化
-const dateText = computed(() => {
-  const y = now.value.getFullYear()
-  const m = now.value.getMonth() + 1
-  const d = now.value.getDate()
-  return `${y} 年 ${m} 月 ${d < 10 ? '0' + d : d} 日`
-})
-
-const weekdayText = computed(() => {
-  const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-  return days[now.value.getDay()]
-})
-
-const timeText = computed(() => {
-  const h = String(now.value.getHours()).padStart(2, '0')
-  const m = String(now.value.getMinutes()).padStart(2, '0')
-  const s = String(now.value.getSeconds()).padStart(2, '0')
-  return `${h}:${m}:${s}`
-})
-
-// 天气图标映射
-const weatherIcon = computed(() => {
-  if (!weather.value) return 'fa-solid fa-cloud'
-  const w = weather.value.weather
-  if (w.includes('晴')) return 'fa-solid fa-sun'
-  if (w.includes('云')) return 'fa-solid fa-cloud-sun'
-  if (w.includes('阴')) return 'fa-solid fa-cloud'
-  if (w.includes('雨')) return 'fa-solid fa-cloud-rain'
-  if (w.includes('雪')) return 'fa-solid fa-snowflake'
-  if (w.includes('雾') || w.includes('霾')) return 'fa-solid fa-smog'
-  if (w.includes('雷')) return 'fa-solid fa-cloud-bolt'
-  return 'fa-solid fa-cloud'
-})
-
-// 更新时间
-let timeTimer = null
-function updateTime() {
-  now.value = new Date()
-}
-
-// 获取 IP 位置 (使用高德 IP 定位 API)
-async function getLocationByIP() {
-  try {
-    if (!AMAP_KEY) {
-      throw new Error('请配置高德 API Key')
-    }
-    
-    const res = await fetch(
-      `https://restapi.amap.com/v3/ip?key=${AMAP_KEY}`
-    )
-    const data = await res.json()
-    
-    if (data.status === '1' && data.adcode) {
-      adcode.value = data.adcode
-      return data.adcode
-    } else {
-      throw new Error(data.info || '定位失败')
-    }
-  } catch (err) {
-    console.error('IP 定位失败:', err)
-    throw err
-  }
-}
-
-// 获取天气信息
-async function fetchWeather(cityCode) {
-  try {
-    if (!AMAP_KEY) {
-      throw new Error('请配置高德 API Key')
-    }
-    
-    const res = await fetch(
-      `https://restapi.amap.com/v3/weather/weatherInfo?key=${AMAP_KEY}&city=${cityCode}`
-    )
-    const data = await res.json()
-    
-    if (data.status === '1' && data.lives && data.lives.length > 0) {
-      weather.value = data.lives[0]
-      error.value = ''
-    } else {
-      throw new Error(data.info || '获取天气失败')
-    }
-  } catch (err) {
-    console.error('获取天气失败:', err)
-    error.value = err.message || '天气加载失败'
-  }
-}
-
-// 初始化天气
-async function initWeather() {
-  loading.value = true
-  error.value = ''
-  
-  try {
-    const cityCode = await getLocationByIP()
-    await fetchWeather(cityCode)
-  } catch (err) {
-    error.value = err.message || '天气加载失败'
-  } finally {
-    loading.value = false
-  }
-}
-
-// 重试获取天气
-function retryWeather() {
-  initWeather()
-}
-
-// 定时更新天气 (每 30 分钟)
-let weatherTimer = null
-function startWeatherUpdate() {
-  weatherTimer = setInterval(() => {
-    if (adcode.value) {
-      fetchWeather(adcode.value)
-    }
-  }, 30 * 60 * 1000)
-}
-
-onMounted(() => {
-  updateTime()
-  timeTimer = setInterval(updateTime, 1000)
-  initWeather()
-  startWeatherUpdate()
-})
-
-onUnmounted(() => {
-  if (timeTimer) clearInterval(timeTimer)
-  if (weatherTimer) clearInterval(weatherTimer)
-})
+const { dateText, weekdayText, timeText } = useClock()
+const { weather, loading, error, weatherIconName, retryWeather } = useWeather()
 </script>
 
 <style scoped>
 .weather-time {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-sm);
   padding: 18px 22px;
-  background: linear-gradient(135deg, rgba(20, 26, 54, 0.45), rgba(16, 22, 48, 0.35));
-  border: 1px solid rgba(130, 156, 248, 0.25);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(226, 234, 255, 0.95);
+  color: var(--fg);
   min-width: 280px;
 }
 
 .time-display {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .date-line {
-  font-size: 0.95rem;
-  color: rgba(198, 206, 240, 0.75);
+  font-size: 0.92rem;
+  color: var(--fg-muted);
   font-weight: 400;
 }
 
 .weekday {
-  margin-left: 8px;
-  color: rgba(173, 194, 255, 0.85);
+  margin-left: var(--space-xs);
+  color: var(--fg-subtle);
 }
 
 .clock-line {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
-  color: rgba(240, 244, 255, 0.98);
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .weather-display {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(130, 156, 248, 0.18);
+  gap: var(--space-xs);
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .weather-main {
@@ -233,81 +95,90 @@ onUnmounted(() => {
 }
 
 .weather-icon {
-  font-size: 1.4rem;
-  color: rgba(255, 215, 120, 0.9);
+  color: #ffffff;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.weather-icon--alert {
+  color: var(--danger);
+  opacity: 1;
 }
 
 .weather-text {
-  color: rgba(226, 234, 255, 0.92);
+  color: var(--fg);
   font-weight: 500;
 }
 
 .temperature {
   margin-left: auto;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 600;
-  color: rgba(118, 255, 214, 0.95);
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .weather-details {
   display: flex;
-  gap: 12px;
-  font-size: 0.88rem;
-  color: rgba(198, 206, 240, 0.7);
+  gap: var(--space-sm);
+  font-size: 0.84rem;
+  color: var(--fg-subtle);
 }
 
 .location {
-  color: rgba(173, 194, 255, 0.8);
+  color: var(--fg-muted);
 }
 
 .weather-loading,
 .weather-error {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-xs);
   padding: 10px 0;
   font-size: 0.9rem;
-  color: rgba(198, 206, 240, 0.7);
-  border-top: 1px solid rgba(130, 156, 248, 0.18);
+  color: var(--fg-subtle);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .loader-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(118, 255, 214, 0.8);
-  animation: pulse-dot 1.4s ease-in-out infinite;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
   50% { opacity: 1; transform: scale(1.1); }
 }
 
 .weather-error {
   cursor: pointer;
-  color: rgba(255, 180, 160, 0.8);
-  transition: color 180ms ease;
+  color: var(--danger);
+  transition: color var(--dur-fast) ease;
 }
 
 .weather-error:hover {
-  color: rgba(255, 200, 180, 0.95);
+  color: var(--danger-strong);
 }
 
 .retry-hint {
   margin-left: auto;
   font-size: 0.82rem;
-  color: rgba(173, 194, 255, 0.6);
+  color: var(--fg-subtle);
 }
 
 @media (max-width: 768px) {
   .weather-time {
     min-width: 0;
     width: 100%;
+    padding: 16px 18px;
   }
   
   .clock-line {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
   }
   
   .weather-details {

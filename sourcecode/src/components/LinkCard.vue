@@ -8,9 +8,9 @@
     @click="onClick"
   >
     <div class="link-card__inner">
-      <div class="link-card__emoji" aria-hidden="true">
+      <div class="link-card__icon-box" aria-hidden="true">
         <img v-if="imageSrc" class="link-card__img" :src="imageSrc" alt="" />
-        <template v-else>{{ emoji }}</template>
+        <SiteIcon v-else :name="iconName" :size="20" class="link-card__svg" />
       </div>
       <div class="link-card__content">
         <div class="link-card__title">{{ label }}</div>
@@ -24,16 +24,17 @@
       </svg>
     </div>
   </a>
-  
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import SiteIcon from './SiteIcon.vue'
 
 const props = defineProps({
   label: { type: String, required: true },
   href: { type: String, required: true },
-  emoji: { type: String, default: '🔗' },
+  icon: { type: String, default: '' },
+  emoji: { type: String, default: '' },
   image: { type: String, default: '' },
   description: { type: String, default: '' },
   highlight: { type: Boolean, default: false },
@@ -42,6 +43,22 @@ const props = defineProps({
 
 const isExternal = computed(() => /^(http|https):\/\//i.test(props.href))
 const emit = defineEmits(['open'])
+
+// 智能推断缺省图标名称
+const iconName = computed(() => {
+  if (props.icon) return props.icon
+  const text = `${props.label || ''} ${props.description || ''}`
+  if (text.includes('缓存') || text.includes('Cache')) return 'cache'
+  if (text.includes('概率') || text.includes('MathDis')) return 'math'
+  if (text.includes('图形') || text.includes('Graph')) return 'chart'
+  if (text.includes('音乐') || text.includes('Musi')) return 'music'
+  if (text.includes('解锁') || text.includes('Unlock')) return 'unlock'
+  if (text.includes('导航') || text.includes('Nav')) return 'compass'
+  if (text.includes('翻译') || text.includes('Trans')) return 'translate'
+  if (text.includes('博客')) return 'blog'
+  if (text.includes('公众号')) return 'newspaper'
+  return 'link'
+})
 
 // Resolve image if provided (supports public directory paths or absolute URLs)
 const imageSrc = computed(() => {
@@ -63,25 +80,30 @@ function onClick(e) {
 .link-card {
   position: relative;
   display: block;
-  border-radius: 18px;
-  padding: 14px;
+  border-radius: var(--radius-xl);
+  padding: 13px 15px;
   text-decoration: none;
-  color: rgba(236, 244, 255, 0.96);
-  background: linear-gradient(180deg, rgba(28, 34, 72, 0.55), rgba(20, 24, 52, 0.55));
-  border: 1px solid rgba(138, 162, 255, 0.18);
+  color: var(--fg);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: var(--blur-sm) saturate(130%);
+  -webkit-backdrop-filter: var(--blur-sm) saturate(130%);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   overflow: hidden;
-  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
+  transition: transform var(--dur-base) ease, box-shadow var(--dur-base) ease, border-color var(--dur-base) ease, background var(--dur-base) ease;
   will-change: transform;
 }
 
+/* 纯净聚光灯（Spotlight）自然柔和漫反射 */
 .link-card::before {
   content: '';
   position: absolute;
-  inset: -2px;
-  background: radial-gradient(120px 120px at var(--mx, 50%) var(--my, 50%), rgba(123, 148, 255, 0.22), rgba(0,0,0,0) 60%);
+  inset: -1px;
+  background: radial-gradient(130px 130px at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.14), transparent 70%);
   opacity: 0;
   transition: opacity 250ms ease;
   pointer-events: none;
+  border-radius: inherit;
 }
 
 .link-card:hover::before {
@@ -89,72 +111,97 @@ function onClick(e) {
 }
 
 .link-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 48px rgba(16, 22, 48, 0.5);
-  border-color: rgba(173, 194, 255, 0.35);
-  background: linear-gradient(180deg, rgba(38, 66, 92, 0.62), rgba(22, 41, 62, 0.62));
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.38), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+  background: var(--card-bg-hover);
 }
 
 .link-card--highlight {
-  border-color: rgba(255, 214, 124, 0.55);
-  background: linear-gradient(180deg, rgba(66, 54, 20, 0.35), rgba(31, 26, 10, 0.35));
+  border-color: rgba(254, 240, 138, 0.35);
+  background: var(--card-highlight-bg);
+  box-shadow: inset 0 1px 1px 0 rgba(254, 240, 138, 0.28), inset 0 0 0 1px rgba(254, 240, 138, 0.1);
 }
 
 .link-card--highlight:hover {
-  border-color: rgba(255, 226, 156, 0.85);
-  background: linear-gradient(180deg, rgba(74, 60, 24, 0.45), rgba(36, 30, 12, 0.45));
+  border-color: rgba(254, 240, 138, 0.65);
+  background: var(--card-highlight-bg-hover);
+  box-shadow: inset 0 1px 1px 0 rgba(254, 240, 138, 0.45), inset 0 0 0 1px rgba(254, 240, 138, 0.18);
 }
 
 .link-card__inner {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 14px;
+  gap: 13px;
 }
 
-.link-card__emoji {
+.link-card__icon-box {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   display: grid;
   place-items: center;
-  font-size: 22px;
-  background: radial-gradient(100% 100% at 40% 30%, rgba(250, 251, 255, 0.22) 0%, rgba(140, 163, 255, 0.15) 100%);
-  border: 1px solid rgba(167, 186, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  color: var(--fg);
+  transition: transform var(--dur-fast) ease, background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.link-card:hover .link-card__icon-box {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.link-card__svg {
+  opacity: 0.88;
+}
+
+.link-card:hover .link-card__svg {
+  opacity: 1;
 }
 
 .link-card__img {
   width: 40px;
   height: 40px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
 }
 
-.link-card__content { min-width: 0; }
+.link-card__content { 
+  min-width: 0; 
+}
 
 .link-card__title {
-  font-size: 1.05rem;
-  font-weight: 550;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #ffffff;
   letter-spacing: 0.01em;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
 .link-card__desc {
-  margin-top: 2px;
-  font-size: 0.92rem;
-  color: rgba(198, 209, 245, 0.75);
-  line-height: 1.35;
+  margin-top: 3px;
+  font-size: 0.84rem;
+  color: var(--fg-muted);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .link-card__icon {
-  width: 22px;
-  height: 22px;
-  opacity: 0.7;
+  width: 18px;
+  height: 18px;
+  color: var(--fg-muted);
+  opacity: 0.6;
+  transition: transform var(--dur-fast) ease, opacity var(--dur-fast) ease, color var(--dur-fast) ease;
 }
 
-/* 鼠标移动光斑跟随 */
-.link-card:hover {
-  --mx: var(--mxi, 50%);
-  --my: var(--myi, 50%);
+.link-card:hover .link-card__icon {
+  opacity: 1;
+  color: #ffffff;
+  transform: translateX(2px);
 }
 </style>

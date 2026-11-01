@@ -33,13 +33,19 @@ test('同步替换旧构建、复制 public 文件并保留独立子站', async 
   await mkdir(path.join(dist, 'assets'), { recursive: true })
   await mkdir(path.join(root, 'components/demo'), { recursive: true })
   await writeFile(path.join(root, 'components/demo/index.html'), 'independent site')
-  await writeFile(path.join(dist, 'index.html'), 'new index')
+  await writeFile(
+    path.join(dist, 'index.html'),
+    '<script type="module" src="/assets/new.js"></script>',
+  )
   await writeFile(path.join(dist, 'assets/new.js'), 'new asset')
   await writeFile(path.join(dist, 'links.json'), '{"sections":[]}')
 
   const result = sync(root)
   assert.equal(result.status, 0, result.stderr)
-  assert.equal(await readFile(path.join(root, 'index.html'), 'utf8'), 'new index')
+  assert.equal(
+    await readFile(path.join(root, 'index.html'), 'utf8'),
+    '<script type="module" src="/assets/new.js"></script>',
+  )
   assert.equal(await readFile(path.join(root, 'assets/new.js'), 'utf8'), 'new asset')
   await assert.rejects(readFile(path.join(root, 'assets/old.js')), { code: 'ENOENT' })
   assert.equal(await readFile(path.join(root, 'links.json'), 'utf8'), '{"sections":[]}')
@@ -55,4 +61,31 @@ test('构建不完整时保留原发布文件并返回失败', async t => {
   assert.notEqual(sync(root).status, 0)
   assert.equal(await readFile(path.join(root, 'index.html'), 'utf8'), 'old index')
   assert.equal(await readFile(path.join(root, 'assets/old.js'), 'utf8'), 'old asset')
+})
+
+test('首页引用不存在的构建资源时拒绝发布', async t => {
+  const root = await fixture(t)
+  const dist = path.join(root, 'sourcecode/dist')
+  await mkdir(path.join(dist, 'assets'), { recursive: true })
+  await writeFile(
+    path.join(dist, 'index.html'),
+    '<script type="module" src="/assets/present.js"></script><link href="/assets/missing.css" rel="stylesheet">',
+  )
+  await writeFile(path.join(dist, 'assets/present.js'), 'present')
+
+  const result = sync(root)
+  assert.notEqual(result.status, 0)
+  assert.match(result.stderr, /missing\.css/)
+  assert.equal(await readFile(path.join(root, 'index.html'), 'utf8'), 'old index')
+})
+
+test('首页没有引用任何构建资源时拒绝发布', async t => {
+  const root = await fixture(t)
+  const dist = path.join(root, 'sourcecode/dist')
+  await mkdir(path.join(dist, 'assets'), { recursive: true })
+  await writeFile(path.join(dist, 'index.html'), '<div id="app"></div>')
+  await writeFile(path.join(dist, 'assets/app.js'), 'app')
+
+  assert.notEqual(sync(root).status, 0)
+  assert.equal(await readFile(path.join(root, 'index.html'), 'utf8'), 'old index')
 })

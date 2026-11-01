@@ -6,15 +6,15 @@
       "title": "站点入口",
       "description": "常用入口与独立页面，集中在此",
       "links": [
-        { "label": "缓存分析 CacheWhat", "href": "/components/CacheWhat/", "emoji": "🗄️", "description": "CacheWhat" },
-        { "label": "数学演示 MathDis", "href": "/components/MathDis/", "emoji": "➗", "description": "Math Dis" },
-        { "label": "图形数学 MathwithGraph", "href": "/components/MathwithGraph/", "emoji": "📈", "description": "Math with Graph" },
-        { "label": "音乐播放 MusiGrace", "href": "/components/MusiGrace/", "emoji": "🎼", "description": "MusiGrace" },
-        { "label": "音乐解锁 MusicUnlock", "href": "/components/MusicUnlock/", "emoji": "🔓", "description": "Music Unlock" },
-        { "label": "导航页", "href": "/components/Navfore/", "emoji": "🧭", "description": "Navfore" },
-        { "label": "翻译器", "href": "/components/TransToWhat/", "emoji": "🧪", "description": "TransToWhat" },
-        { "label": "博客", "href": "https://www.cnblogs.com/Severj", "emoji": "📝", "description": "外部博客" },
-        { "label": "公众号", "href": "https://mp.weixin.qq.com/s/KeUQrukPCCm_neH55cQb9A?token=466519641&lang=zh_CN", "emoji": "📖", "description": "微信公众号文章" }
+        { "label": "缓存分析 CacheWhat", "href": "/components/CacheWhat/", "icon": "cache", "description": "CacheWhat" },
+        { "label": "数学演示 MathDis", "href": "/components/MathDis/", "icon": "math", "description": "Math Dis" },
+        { "label": "图形数学 MathwithGraph", "href": "/components/MathwithGraph/", "icon": "chart", "description": "Math with Graph" },
+        { "label": "音乐播放 MusiGrace", "href": "/components/MusiGrace/", "icon": "music", "description": "MusiGrace" },
+        { "label": "音乐解锁 MusicUnlock", "href": "/components/MusicUnlock/", "icon": "unlock", "description": "Music Unlock" },
+        { "label": "导航页", "href": "/components/Navfore/", "icon": "compass", "description": "Navfore" },
+        { "label": "翻译器", "href": "/components/TransToWhat/", "icon": "translate", "description": "TransToWhat" },
+        { "label": "博客", "href": "https://www.cnblogs.com/Severj", "icon": "blog", "description": "外部博客" },
+        { "label": "公众号", "href": "https://mp.weixin.qq.com/s/KeUQrukPCCm_neH55cQb9A?token=466519641&lang=zh_CN", "icon": "newspaper", "description": "微信公众号文章" }
       ]
     },
     {
@@ -25,7 +25,7 @@
       "links": [
         { "label": "Afffections", "href": "/components/MyFriends/rose/", "image": "img/1.jpg", "description": "蔷薇", "highlight": true },
         { "label": "Lemon", "href": "/components/MyFriends/lemon/", "image": "img/2.jpg", "description": "纱雾柠檬" },
-        { "label": "Nightstart", "href": "/components/MyFriends/nightstart/", "image": "img/3.jpg", "description": "夜初"},
+        { "label": "Nightstart", "href": "/components/MyFriends/nightstart/", "image": "img/3.jpg", "description": "夜初" },
         { "label": "Shire", "href": "/components/MyFriends/shire/", "image": "img/4.jpg", "description": "夏尔" }
       ]
     },
@@ -40,56 +40,64 @@
           "description": "AI快速发展之下，对个人才华、科研与自我价值的思考",
           "href": "https://mp.weixin.qq.com/s/bgKydW2P-1EFOOYCZyjdZA",
           "date": "2026-10-16",
-          "category": "随笔"
+          "category": "随笔",
+          "icon": "thought"
         },
         {
           "title": "岛",
           "description": "重访东壁岛，在海风、夏日与旧时记忆中回望成长",
           "href": "https://mp.weixin.qq.com/s/mHYABEoLJYzClDDnRIIeYw",
           "date": "2026-04-04",
-          "category": "旅记"
+          "category": "旅记",
+          "icon": "island"
         },
         {
           "title": "鸟儿",
           "description": "从童年的麻雀到校园里的雨燕，关于陪伴、生命与自由的回忆",
           "href": "https://mp.weixin.qq.com/s/7Keqi_-OKYqGZ4DJRC9I2w",
           "date": "2025-06-15",
-          "category": "随笔"
+          "category": "随笔",
+          "icon": "bird"
         },
         {
           "title": "高考十日记 | 5.31",
           "description": "我的高考日记之一",
           "href": "https://mp.weixin.qq.com/s/8bdonbf9Ke2Pd0IH8Yy6fQ",
           "date": "2024-3-14",
-          "category": "校园生活"
+          "category": "校园生活",
+          "icon": "calendar"
         },
         {
           "title": "996，灵与肉",
           "description": "大一暑假时的一些思考",
           "href": "https://mp.weixin.qq.com/s/x4snX8QJAMHyUu6a5d3b8w",
           "date": "2024-7-14",
-          "category": "校园生活"
+          "category": "校园生活",
+          "icon": "hourglass"
         },
         {
           "title": "Never Ending Tales",
           "description": "2025春节期间各种思绪的杂烩",
           "href": "https://mp.weixin.qq.com/s/wu9_v_bNzOaACv1c0w3kiw",
           "date": "2025-1-31",
-          "category": "校园生活"
+          "category": "校园生活",
+          "icon": "sparkles"
         },
         {
           "title": "面向FZU——如何在VSCode中使用fzuasm",
           "description": "福州大学汇编语言编译器fzuasm的安装与使用指南",
           "href": "https://www.cnblogs.com/Severj/p/18737211",
           "date": "2025-2-25",
-          "category": "校园生活"
+          "category": "校园生活",
+          "icon": "terminal"
         },
         {
           "title": "纪行·延平",
           "description": "一次突发奇想前往延平的旅记",
           "href": "https://mp.weixin.qq.com/s/qhOlQhVJF4wCoukxPHHqqw",
           "date": "2025-5-11",
-          "category": "旅记"
+          "category": "旅记",
+          "icon": "mountain"
         }
       ]
     }

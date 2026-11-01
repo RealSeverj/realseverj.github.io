@@ -1,0 +1,158 @@
+/*
+ * 设计令牌（Design Tokens）
+ *
+ * 全站统一的颜色、圆角、光影、间距与动效规范。
+ * 遵循自然、纯净的磨砂玻璃（Frosted Glass）与物理微光折射（Light Refraction）美学，
+ * 抛弃生硬糊浊的外黑扩散阴影，通过双层内高光（Inner Rim Light）与表面微渐变强化卡片通透立体感。
+ */
+:root {
+  color-scheme: dark;
+
+  /* 基础画布与背景环境 */
+  --bg: #0a0d18;
+  --bg-deep: #070a14;
+  --bg-panel: rgba(18, 24, 40, 0.6);
+  --scrim-rgb: 10, 14, 26;
+  --panel-rgb: 22, 28, 48;
+  --line-rgb: 180, 200, 240;
+  --line-soft-rgb: 210, 225, 255;
+  --text-rgb: 240, 244, 255;
+  --text-soft-rgb: 210, 218, 238;
+
+  /* 文字层级：通透、明亮、清晰 */
+  --fg: rgba(255, 255, 255, 0.96);
+  --fg-strong: #ffffff;
+  --fg-muted: rgba(220, 228, 248, 0.78);
+  --fg-subtle: rgba(195, 206, 232, 0.65);
+  --fg-faint: rgba(170, 184, 215, 0.48);
+  --focus-ring: rgba(255, 255, 255, 0.85);
+
+  /* 自然氛围强调色：以纯净月白与温润冰蓝微光为主 */
+  --accent: #eef5ff;
+  --accent-rgb: 238, 245, 255;
+  --accent-soft: rgba(255, 255, 255, 0.12);
+  --accent-line: rgba(255, 255, 255, 0.35);
+  --accent-glow: rgba(255, 255, 255, 0.6);
+  --violet: #a5b4fc;
+  --mint: #a7f3d0;
+  --blue: #93c5fd;
+  --gold: #fde68a;
+  --danger: rgba(254, 202, 202, 0.9);
+  --danger-strong: #fca5a5;
+
+  /* 首页链接卡与图标块：受光面到背光面的自然微光微渐变 */
+  --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.03) 100%);
+  --card-bg-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.105) 0%, rgba(255, 255, 255, 0.055) 100%);
+  --card-border: rgba(255, 255, 255, 0.13);
+  --card-highlight-bg: linear-gradient(145deg, rgba(255, 250, 235, 0.09) 0%, rgba(255, 250, 235, 0.04) 100%);
+  --card-highlight-bg-hover: linear-gradient(145deg, rgba(255, 250, 235, 0.14) 0%, rgba(255, 250, 235, 0.075) 100%);
+  --gold-line: rgba(253, 230, 138, 0.45);
+  --gold-line-strong: rgba(254, 240, 138, 0.8);
+  --icon-tile-bg: rgba(255, 255, 255, 0.08);
+
+  /* Hero 区域：克制、雅致、通透 */
+  --hero-badge-bg: rgba(255, 255, 255, 0.08);
+  --hero-badge-text: rgba(255, 255, 255, 0.92);
+  --hero-action-bg: rgba(255, 255, 255, 0.1);
+  --hero-action-bg-hover: rgba(255, 255, 255, 0.18);
+  --shadow-accent: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+  /* 玻璃表面与精细描边：微晶折射渐变层 */
+  --surface: linear-gradient(145deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.035) 100%);
+  --surface-raised: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  --surface-flat: linear-gradient(160deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --surface-header: rgba(255, 255, 255, 0.045);
+  --surface-item: rgba(255, 255, 255, 0.04);
+  --surface-item-hover: rgba(255, 255, 255, 0.08);
+  --surface-window: rgba(15, 20, 36, 0.92);
+  --surface-inset: rgba(255, 255, 255, 0.035);
+  --surface-hover: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.14);
+  --border-soft: rgba(255, 255, 255, 0.09);
+  --border-inset: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.28);
+
+  /* 
+   * 纯内发光与微光折射体系（不再依赖易被裁剪、容易上下黏糊的外部大阴影）
+   * 采用顶部受光亮折射线（inset 0 1px 1px）加全局内发光（inset 0 0 0 1px）
+   */
+  --shadow-card: inset 0 1px 1px 0 rgba(255, 255, 255, 0.24), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-card-hover: inset 0 1px 1px 0 rgba(255, 255, 255, 0.42), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  --shadow-sm: inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+  --shadow-float: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-pop: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-window: inset 0 1px 1px 0 rgba(255, 255, 255, 0.3), 0 24px 60px rgba(0, 0, 0, 0.6);
+  --shadow-chip: inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+  --shadow-chip-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.32);
+  --text-shadow-on-photo: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-dot: 0 0 14px rgba(255, 255, 255, 0.9);
+
+  /* 磨砂模糊 */
+  --blur-xs: blur(6px);
+  --blur-sm: blur(10px);
+  --blur-md: blur(16px);
+  --blur-lg: blur(24px);
+  --blur-xl: blur(32px);
+
+  /* 圆角 */
+  --radius-xs: 4px;
+  --radius-2xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+  --radius-2xl: 26px;
+  --radius-pill: 999px;
+
+  /* 间距 */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* 动效 */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-base: 260ms;
+  --dur-slow: 420ms;
+
+  /* 布局尺寸 */
+  --layout-max: 1400px;
+  --content-max: 900px;
+  --sidebar-width: 420px;
+  --header-height: 64px;
+  --footer-height: 64px;
+
+  /* 字体系统 */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 统一的高级磨砂玻璃外观：纯内发光，永不被容器 overflow 裁切，边界清晰利落 */
+.surface {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  backdrop-filter: var(--blur-md) saturate(135%);
+  -webkit-backdrop-filter: var(--blur-md) saturate(135%);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--dur-base) ease, box-shadow var(--dur-base) ease, background var(--dur-base) ease;
+}
+
+/* 隐藏滚动条但保留平滑滚动能力 */
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}

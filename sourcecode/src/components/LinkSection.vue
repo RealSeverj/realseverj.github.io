@@ -13,6 +13,7 @@
         :key="link.href"
         :label="link.label || link.title"
         :href="link.href"
+        :icon="link.icon"
         :emoji="link.emoji"
         :image="link.image"
         :description="link.description"
@@ -62,80 +63,79 @@ function onLinkClick(link) {
 }
 
 function shouldIntercept(href) {
-  // 仅对 components 子站使用 Modal；外链 http/https 走新标签（由 LinkCard target 控制）
   return /^\/components\//.test(href) || href.startsWith('./components/') || href.startsWith('/components/')
 }
 </script>
 
 <style scoped>
 .link-section {
-  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 4rem);
-  border-radius: 28px;
-  border: 1px solid rgba(118, 143, 234, 0.18);
-  background: rgba(18, 24, 48, 0.48);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 12px 24px rgba(8, 12, 28, 0.45);
-  transition: transform 240ms ease, box-shadow 240ms ease;
-}
-
-.link-section:not(:first-of-type) {
-  margin-top: clamp(1.8rem, 5vh, 3rem);
+  padding: clamp(1.6rem, 3.5vw, 2.4rem) clamp(1.2rem, 3.5vw, 2.4rem);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+  background: var(--surface-flat);
+  backdrop-filter: var(--blur-lg) saturate(130%);
+  -webkit-backdrop-filter: var(--blur-lg) saturate(130%);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: transform var(--dur-base) ease, box-shadow var(--dur-base) ease, border-color var(--dur-base) ease;
 }
 
 .link-section:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(12, 18, 36, 0.55);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.38), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .link-section__header {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  margin-bottom: clamp(1.6rem, 4vw, 2.2rem);
+  gap: 0.6rem;
+  margin-bottom: clamp(1.2rem, 3vw, 1.8rem);
 }
 
 .link-section__title-group {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .link-section__badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(115, 183, 255, 0.18);
-  color: rgba(199, 209, 255, 0.72);
-  font-size: 0.8rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--fg-muted);
+  font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 h2 {
   margin: 0;
-  font-size: clamp(1.5rem, 3.8vw, 2.1rem);
-  font-weight: 500;
-  color: rgba(240, 244, 255, 0.96);
-  letter-spacing: -0.01em;
+  font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
 
 .link-section__description {
   margin: 0;
   max-width: 54ch;
-  color: rgba(198, 206, 240, 0.68);
-  font-size: 1rem;
-  line-height: 1.65;
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .link-section__grid {
   display: grid;
-  gap: clamp(1rem, 3vw, 1.5rem);
+  gap: clamp(0.9rem, 2.5vw, 1.25rem);
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 @media (max-width: 640px) {
   .link-section {
-    padding: clamp(2rem, 9vw, 2.8rem) clamp(1.2rem, 7vw, 2rem);
+    padding: clamp(1.4rem, 6vw, 1.8rem) clamp(1rem, 5vw, 1.4rem);
   }
 
   .link-section__grid {
