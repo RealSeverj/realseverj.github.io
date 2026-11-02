@@ -3,7 +3,7 @@ import site from '../site.config'
 
 export function useWallpaper() {
   const wallpaperConfig = site.wallpaper || {}
-  const fallbackImages = Array.from({ length: 10 }, (_, i) => `/img/background${i + 1}.webp`)
+  const fallbackImages = Array.from({ length: 10 }, (_, i) => `/img/backgrounds/background${i + 1}.webp`)
   const images = wallpaperConfig.image ? [wallpaperConfig.image] : fallbackImages
 
   const currentIndex = ref(0)

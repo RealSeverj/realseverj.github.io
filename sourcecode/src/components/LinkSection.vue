@@ -1,5 +1,5 @@
 <template>
-  <section class="link-section" :aria-labelledby="headingId">
+  <section :id="id || undefined" class="link-section" :aria-labelledby="headingId">
     <header class="link-section__header">
       <div class="link-section__title-group">
         <span v-if="badge" class="link-section__badge">{{ badge }}</span>
@@ -69,6 +69,7 @@ function shouldIntercept(href) {
 
 <style scoped>
 .link-section {
+  scroll-margin-top: 96px;
   padding: clamp(1.6rem, 3.5vw, 2.4rem) clamp(1.2rem, 3.5vw, 2.4rem);
   border-radius: var(--radius-2xl);
   border: 1px solid var(--border);

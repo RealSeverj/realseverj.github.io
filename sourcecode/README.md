@@ -25,13 +25,16 @@
 
 ## 源码结构
 
-- `src/App.vue`：页面骨架、壁纸切换与双栏布局
+- `src/App.vue`：花田首屏与单栏内容骨架，移除侧边栏
+- `src/composables/useSceneScroll.js`：原生滚动进度与壁纸压暗、首屏文字淡出
 - `src/views/HomeView.vue`：首页视图，按 `links.json` 渲染链接分组
 - `src/components/`：链接卡片、分区、模态小窗、天气时间、音乐播放器、文章列表
 - `src/lib/links.js`：`links.json` 共享缓存加载器
 - `src/styles/tokens.css`：设计变量（颜色、圆角、阴影、模糊、间距、布局宽度）
 - `src/style.css`：全局重置与基础排版
 - `src/site.config.js`：Hero 文案与壁纸参数
+
+首屏默认使用 `public/img/background.webp`，无卡片显示时间天气和轻量音乐控件。轻滑一段后，会平滑吸附到主内容区，同时壁纸逐渐变暗；内容区继续正常滚动，向上回滚会恢复首屏。当前歌词和译文直接显示在首屏，歌单按需展开后直接列出歌曲，并保留进度、音量和循环控制。系统启用减少动态效果时，关闭自动吸附及展开动画。天气成功结果在当前浏览器会话中缓存半小时。
 
 ## 内容数据
 

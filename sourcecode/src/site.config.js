@@ -4,10 +4,10 @@
 // 运行时由 src/lib/links.js 读取，避免两处内容互相覆盖。
 
 export default {
-  // 壁纸配置：留空时自动使用 /img/background1..10.webp 随机一张；
+  // 壁纸配置：留空时自动使用 /img/backgrounds/background1..10.webp 随机一张；
   // 也可填入相对路径或完整 URL 固定一张。
   wallpaper: {
-    image: '',
+    image: '/img/background.webp',
     // 当前视觉以原图呈现，不做模糊和额外蒙层；
     // 需要柔化时把 blur 调到 2~8、overlay 改成带透明度的颜色即可。
     blur: 0,

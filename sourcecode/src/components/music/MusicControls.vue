@@ -34,7 +34,7 @@
         </button>
         <div class="volume-slider">
           <input 
-            type="range" min="0" max="100"
+            type="range" min="0" max="100" aria-label="音量"
             :value="volume" 
             @input="$emit('update:volume', Number($event.target.value))"
           />

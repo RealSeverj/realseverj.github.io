@@ -1,6 +1,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const AMAP_KEY = '19a90f1c901dec314ac2c40ced3031a0'
+const CACHE_KEY = 'severj:weather:v1'
+const CACHE_TTL = 30 * 60 * 1000
 
 export function useWeather() {
   const weather = ref(null)
@@ -8,6 +10,18 @@ export function useWeather() {
   const error = ref('')
   const adcode = ref('')
   let weatherTimer = null
+
+  function readCache() {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null')
+      if (!cached?.weather?.city || !cached?.adcode || !Number.isFinite(cached.time)) return false
+      weather.value = cached.weather
+      adcode.value = cached.adcode
+      return Date.now() - cached.time < CACHE_TTL
+    } catch {
+      return false
+    }
+  }
 
   const weatherIconName = computed(() => {
     if (!weather.value) return 'cloud'
@@ -40,6 +54,9 @@ export function useWeather() {
     if (data.status === '1' && data.lives && data.lives.length > 0) {
       weather.value = data.lives[0]
       error.value = ''
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ weather: weather.value, adcode: cityCode, time: Date.now() }))
+      } catch { /* Weather still works when browser storage is unavailable. */ }
     } else {
       throw new Error(data.info || '获取天气失败')
     }
@@ -53,7 +70,7 @@ export function useWeather() {
       await fetchWeather(cityCode)
     } catch (err) {
       console.error('天气获取失败:', err)
-      error.value = err.message || '天气加载失败'
+      error.value = '天气暂时不可用'
     } finally {
       loading.value = false
     }
@@ -64,7 +81,8 @@ export function useWeather() {
   }
 
   onMounted(() => {
-    initWeather()
+    if (readCache()) loading.value = false
+    else initWeather()
     weatherTimer = setInterval(() => {
       if (adcode.value) {
         fetchWeather(adcode.value).catch(console.error)

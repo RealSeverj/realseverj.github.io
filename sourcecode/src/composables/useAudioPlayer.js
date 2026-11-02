@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue'
 import { parseLyric, findCurrentLyricIndex } from '../lib/lyric'
-import { MusicMetadataManager } from '../lib/musicMetadata'
 
 export function useAudioPlayer() {
   const audioRef = ref(null)
@@ -17,12 +16,6 @@ export function useAudioPlayer() {
   const isMuted = ref(false)
   const loadedProgress = ref(0)
 
-  const metadataManager = new MusicMetadataManager()
-
-  // 模块加载映射
-  const musicModules = import.meta.glob('../assets/mp3/*.{mp3,flac,wav,ogg}', { eager: false })
-  const lyricModules = import.meta.glob('../assets/mp3/*.lrc', { eager: false, query: '?raw', import: 'default' })
-
   const playedProgress = computed(() => {
     return duration.value > 0 ? (currentTime.value / duration.value) * 100 : 0
   })
@@ -32,19 +25,25 @@ export function useAudioPlayer() {
     return modes[loopMode.value]
   })
 
-  async function loadLyric(musicPath) {
-    const lyricPath = musicPath.replace(/\.(mp3|flac|wav|ogg)$/i, '.lrc')
+  async function loadLyric(track) {
+    if (!track?.lrc) {
+      parsedLyrics.value = []
+      currentLyricIndex.value = -1
+      return
+    }
     try {
-      if (lyricModules[lyricPath]) {
-        const lrcText = await lyricModules[lyricPath]()
+      const res = await fetch(track.lrc)
+      if (res.ok) {
+        const lrcText = await res.text()
         parsedLyrics.value = parseLyric(lrcText)
       } else {
         parsedLyrics.value = []
       }
       currentLyricIndex.value = -1
     } catch (err) {
-      console.error('加载歌词失败:', err)
+      console.warn('加载歌词失败:', err)
       parsedLyrics.value = []
+      currentLyricIndex.value = -1
     }
   }
 
@@ -52,12 +51,6 @@ export function useAudioPlayer() {
     if (index < 0 || index >= playlist.value.length) return
     currentIndex.value = index
     const track = playlist.value[index]
-
-    if (!track.url && musicModules[track.path]) {
-      const mod = await musicModules[track.path]()
-      track.url = mod.default
-    }
-
     currentTrack.value = track
 
     if (audioRef.value && track.url) {
@@ -69,15 +62,7 @@ export function useAudioPlayer() {
       duration.value = track.duration || 0
     }
 
-    if (track.url) {
-      const meta = await metadataManager.extract(track.url, track.path)
-      Object.assign(track, meta)
-      if (currentIndex.value === index) {
-        currentTrack.value = { ...track }
-      }
-    }
-
-    await loadLyric(track.path)
+    await loadLyric(track)
   }
 
   async function playTrack(index) {
@@ -173,32 +158,25 @@ export function useAudioPlayer() {
   }
 
   async function init() {
-    const musicFiles = Object.keys(musicModules)
-    if (!musicFiles.length) {
-      console.warn('未找到音频文件')
-      return
+    try {
+      const res = await fetch('/music/playlist.json')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      playlist.value = data.map((item) => ({
+        id: item.id,
+        url: item.src,
+        path: item.src,
+        title: item.title,
+        artist: item.artist,
+        album: item.album || '',
+        duration: item.duration || 0,
+        cover: item.cover || '',
+        lrc: item.lrc || ''
+      }))
+    } catch (err) {
+      console.warn('获取播放列表失败:', err)
+      playlist.value = []
     }
-
-    playlist.value = musicFiles.map((path) => {
-      const fileName = path.split('/').pop() || ''
-      const base = fileName.replace(/\.(mp3|flac|wav|ogg)$/i, '')
-      let title = base
-      let artist = '未知艺术家'
-      const parts = base.split(' - ')
-      if (parts.length >= 2) {
-        artist = parts[0].trim()
-        title = parts.slice(1).join(' - ').trim()
-      }
-      return {
-        url: '',
-        path,
-        title,
-        artist,
-        album: '',
-        duration: 0,
-        cover: ''
-      }
-    })
 
     if (audioRef.value) {
       audioRef.value.volume = (volume.value ?? 70) / 100
@@ -211,7 +189,6 @@ export function useAudioPlayer() {
 
   function cleanup() {
     audioRef.value?.pause()
-    metadataManager.cleanup()
   }
 
   return {
@@ -247,4 +224,3 @@ export function useAudioPlayer() {
     handleEnded
   }
 }
-

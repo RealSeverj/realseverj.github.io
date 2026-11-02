@@ -7,6 +7,9 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "build:playlist": "node ./scripts/build-playlist.mjs",
+    "prebuild": "npm run build:playlist",
+    "pretest": "npm run build:playlist",
     "dev": "vite",
     "build": "vite build",
     "test": "node --test",

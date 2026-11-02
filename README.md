@@ -7,7 +7,7 @@
 
 ## 项目亮点
 
-- 新首页（Vue + Vite）：双栏布局、玻璃质感卡片、壁纸切换与侧边栏折叠，响应式适配移动端
+- 新首页（Vue + Vite）：无卡片花田首屏、时间天气与轻量音乐控件；滚动进入单栏内容，壁纸随滚动逐渐压暗
 - 设计变量集中管理：[sourcecode/src/styles/tokens.css](sourcecode/src/styles/tokens.css) 统一颜色、圆角、阴影、模糊、间距与动效，换肤只需改这一处
 - 组件页小窗预览：指向 `/components/` 的链接默认在模态小窗中打开，不打断浏览
 - 多独立功能页：例如
@@ -26,7 +26,7 @@
   - `/img`、`/icon`：壁纸、头像与站点图标
   - `/sourcecode`：Vue 源码工程
 - 源码工程 `/sourcecode`
-  - [src/App.vue](sourcecode/src/App.vue)：页面骨架、壁纸与双栏布局
+  - [src/App.vue](sourcecode/src/App.vue)：沉浸首屏与单栏内容骨架
   - [src/views/HomeView.vue](sourcecode/src/views/HomeView.vue)：首页视图与链接渲染
   - [src/components/LinkSection.vue](sourcecode/src/components/LinkSection.vue)：链接分组与小窗拦截
   - [src/components/ModalFrame.vue](sourcecode/src/components/ModalFrame.vue)：模态小窗容器（Esc 关闭、焦点循环）
@@ -84,7 +84,7 @@ npm --prefix sourcecode run serve:root
   - 文章项使用 `title` 字段作为展示名
 - 站点文案与壁纸：[sourcecode/src/site.config.js](sourcecode/src/site.config.js)
   - Hero 标题、副标题、简介与按钮
-  - 壁纸参数：`image` 留空则从 `/img/background1.webp ~ background10.webp` 随机，`blur` 与 `overlay` 控制模糊和暗化层
+  - 壁纸参数：默认固定 `/img/background.webp`；`image` 留空则从 `/img/backgrounds/background1.webp ~ background10.webp` 随机，`blur` 与 `overlay` 控制基础模糊和蒙层
 - 视觉风格：[sourcecode/src/styles/tokens.css](sourcecode/src/styles/tokens.css)
   - 颜色、圆角、阴影、模糊、间距、动效与布局宽度都在这里定义
 - 组件页拦截规则：指向 `/components/` 的链接会在模态框内打开（见 [sourcecode/src/components/LinkSection.vue](sourcecode/src/components/LinkSection.vue)）
@@ -92,9 +92,9 @@ npm --prefix sourcecode run serve:root
 ## 核心实现概览
 
 - 布局与交互：[sourcecode/src/App.vue](sourcecode/src/App.vue)
-  - 头部操作区：壁纸切换、侧边栏显示/隐藏
-  - 双列布局：主内容与侧边栏各自独立滚动
-  - 小屏断点（≤1200px）：自动折叠侧边栏，并以浮层形式显示
+  - 首屏不显示内容卡片，时间天气和当前歌词直接融入背景，歌单按需展开后直接选曲
+  - 全页使用原生滚动；站点、朋友与文章集中在一个主内容区
+  - [useSceneScroll.js](sourcecode/src/composables/useSceneScroll.js) 将首屏滚动距离映射到壁纸暗度，轻滑后吸附到主内容区，回滚时同步恢复
 - 首页渲染：[sourcecode/src/views/HomeView.vue](sourcecode/src/views/HomeView.vue)
   - 通过 `links.js` 拉取 [links.json](links.json)，失败时显示可重试的错误提示
   - 对 `/components/` 链接以模态框打开，对外链在新标签页打开

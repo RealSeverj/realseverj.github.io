@@ -1,12 +1,14 @@
 <template>
   <section class="hero" aria-labelledby="hero-heading">
     <div class="hero__content">
-      <div class="hero__badge" v-if="badge">
-        <span>{{ badge }}</span>
+      <div class="hero__identity">
+        <div class="hero__badge" v-if="badge">
+          <span>{{ badge }}</span>
+        </div>
+        <h1 id="hero-heading">{{ title }}</h1>
+        <p class="hero__tagline">{{ tagline }}</p>
+        <p class="hero__intro" v-if="intro">{{ intro }}</p>
       </div>
-      <h1 id="hero-heading">{{ title }}</h1>
-      <p class="hero__tagline">{{ tagline }}</p>
-      <p class="hero__intro" v-if="intro">{{ intro }}</p>
       <div class="hero__actions" v-if="actions && actions.length">
         <a
           v-for="action in actions"
@@ -52,14 +54,19 @@ const props = defineProps({
 .hero {
   display: flex;
   align-items: center;
-  padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 5vw, 4rem);
+  padding: 0 0 40px;
   position: relative;
 }
 
 .hero__content {
-  max-width: 680px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
   color: var(--fg-strong);
 }
+.hero__identity { max-width: 680px; min-width: 0; }
 
 .hero__badge {
   display: inline-flex;
@@ -81,7 +88,7 @@ const props = defineProps({
 }
 
 h1 {
-  font-size: clamp(2.9rem, 7vw, 4.6rem);
+  font-size: clamp(2.5rem, 4vw, 3.2rem);
   font-weight: 600;
   margin: 0;
   line-height: 1.1;
@@ -91,16 +98,16 @@ h1 {
 }
 
 .hero__tagline {
-  margin: 1.2rem 0 0;
-  font-size: clamp(1.2rem, 3.2vw, 1.6rem);
+  margin: 12px 0 0;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
   color: rgba(255, 255, 255, 0.88);
   line-height: 1.6;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .hero__intro {
-  margin: 1.4rem 0 0;
-  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  margin: 8px 0 0;
+  font-size: 0.95rem;
   color: var(--fg-muted);
   line-height: 1.7;
 }
@@ -109,7 +116,8 @@ h1 {
   display: flex;
   gap: 0.85rem;
   flex-wrap: wrap;
-  margin-top: 2.2rem;
+  flex-shrink: 0;
+  margin-top: 0;
 }
 
 .hero__action {
@@ -147,13 +155,15 @@ h1 {
 
 @media (max-width: 768px) {
   .hero {
-    padding-top: clamp(4rem, 10vh, 6rem);
+    padding-top: 0;
     justify-content: center;
     text-align: center;
   }
 
   .hero__content {
+    flex-direction: column;
     align-items: center;
+    gap: 24px;
   }
 
   .hero__badge {
