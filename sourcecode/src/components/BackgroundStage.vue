@@ -57,7 +57,7 @@ useBackgroundParallax(stageRef)
 .background-daylight {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(223, 245, 247, 0.12), transparent 55%);
+  background: radial-gradient(80% 60% at 22% 28%, rgba(16, 48, 64, 0.12), transparent 70%);
 }
 
 .background-tint {
@@ -89,7 +89,7 @@ useBackgroundParallax(stageRef)
     background-position: 65% center;
   }
   .background-daylight {
-    background: linear-gradient(90deg, rgba(213, 238, 242, 0.48), rgba(213, 238, 242, 0.06) 80%);
+    background: linear-gradient(180deg, rgba(14, 42, 56, 0.18) 0%, rgba(14, 42, 56, 0.06) 55%, transparent 100%);
   }
 }
 

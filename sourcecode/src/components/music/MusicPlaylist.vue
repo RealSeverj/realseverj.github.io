@@ -232,9 +232,13 @@ function toggleOpen() {
 }
 .playlist--inline { flex: 1; min-height: 0; display: flex; flex-direction: column; border: 0; padding: 0; }
 .playlist--inline .playlist-collapse { flex: 1; min-height: 0; transition: none; }
-.playlist--inline .playlist-items { height: 100%; max-height: none; margin-top: 0; padding-right: 3px; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(220, 241, 250, 0.25) transparent; }
-.playlist--inline .playlist-items::-webkit-scrollbar { display: block; width: 3px; }
-.playlist--inline .playlist-item { padding: 11px 10px; }
+.playlist--inline .playlist-items { height: 100%; max-height: none; margin-top: 0; padding-right: 4px; overscroll-behavior: contain; gap: 5px; }
+.playlist--inline .playlist-items::-webkit-scrollbar { display: block; width: 4px; }
+.playlist--inline .playlist-items::-webkit-scrollbar-track { background: transparent; }
+.playlist--inline .playlist-items::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 999px; }
+.playlist--inline .playlist-items::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+.playlist--inline .playlist-items::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.playlist--inline .playlist-item { padding: 8px 10px; }
 .playlist--inline .item-artist { color: var(--fg-muted); }
 @media (prefers-reduced-motion: reduce) {
   .item-playing { animation: none; }

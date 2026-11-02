@@ -222,41 +222,74 @@ const { weather, loading, error, weatherIconName, retryWeather } = useWeather()
   align-items: center;
   flex-wrap: wrap;
   gap: 0;
-  color: #123644;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+  min-height: 26px;
+  color: rgba(248, 253, 255, 0.95);
+  text-shadow:
+    0 1px 5px rgba(16, 48, 64, 0.38),
+    0 3px 14px rgba(16, 48, 64, 0.2);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .weather-time--ambient .date-line {
-  font-size: 0.86rem;
-  letter-spacing: 0.12em;
+  font-size: 0.96rem;
+  letter-spacing: 0.06em;
   color: inherit;
 }
 
 .weather-time--ambient .weekday {
+  position: relative;
   color: inherit;
-  opacity: 0.85;
-  margin-left: 18px;
-  padding-left: 18px;
-  border-left: 1px solid rgba(24, 63, 74, 0.3);
+  opacity: 0.92;
+  margin-left: 14px;
+  padding-left: 16px;
+  letter-spacing: 0.04em;
+}
+
+.weather-time--ambient .weekday::before,
+.weather-time--ambient .weather-display::before,
+.weather-time--ambient .weather-loading::before,
+.weather-time--ambient .weather-error::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+  transform: translateY(-50%);
 }
 
 .weather-time--ambient .weather-display {
+  position: relative;
   display: inline-flex;
   flex-direction: row;
   align-items: center;
   gap: 16px;
-  padding: 0 0 0 18px;
-  margin-left: 18px;
+  padding: 0 0 0 16px;
+  margin-left: 14px;
   border: 0;
-  border-left: 1px solid rgba(24, 63, 74, 0.3);
 }
 
 .weather-time--ambient .weather-main {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
+  font-size: 0.96rem;
+}
+
+.weather-time--ambient .weather-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.95;
+  filter: drop-shadow(0 1px 4px rgba(16, 48, 64, 0.32));
+}
+
+.weather-time--ambient .weather-text {
+  font-weight: 500;
+  letter-spacing: 0.03em;
 }
 
 .weather-time--ambient .weather-icon,
@@ -267,9 +300,10 @@ const { weather, loading, error, weatherIconName, retryWeather } = useWeather()
 
 .weather-time--ambient .temperature {
   margin-left: 2px;
-  font-size: 0.95rem;
-  font-weight: 400;
-  text-shadow: none;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-shadow: inherit;
 }
 
 .weather-time--ambient .weather-details {
@@ -290,13 +324,13 @@ const { weather, loading, error, weatherIconName, retryWeather } = useWeather()
 
 .weather-time--ambient .weather-loading,
 .weather-time--ambient .weather-error {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 0 0 0 18px;
-  margin-left: 18px;
+  padding: 0 0 0 16px;
+  margin-left: 14px;
   border: 0;
-  border-left: 1px solid rgba(24, 63, 74, 0.3);
   font-size: 0.8rem;
   color: inherit;
 }
@@ -360,19 +394,31 @@ const { weather, loading, error, weatherIconName, retryWeather } = useWeather()
   .weather-time--ambient .clock-line {
     font-size: clamp(5rem, 20vw, 7rem);
   }
-  .weather-time--ambient .date-line {
-    font-size: 0.8rem;
-    letter-spacing: 0.03em;
+  .weather-time--ambient .date-line,
+  .weather-time--ambient .weather-main {
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+  }
+  .weather-time--ambient .temperature {
+    font-size: 0.92rem;
   }
   .weather-time--ambient .date-weather-line {
-    gap: 8px 14px;
+    gap: 6px 14px;
   }
-  .weather-time--ambient .weekday,
+  .weather-time--ambient .weekday {
+    margin-left: 10px;
+    padding-left: 12px;
+  }
   .weather-time--ambient .weather-display,
   .weather-time--ambient .weather-loading,
   .weather-time--ambient .weather-error {
-    margin-left: 10px;
-    padding-left: 10px;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  .weather-time--ambient .weather-display::before,
+  .weather-time--ambient .weather-loading::before,
+  .weather-time--ambient .weather-error::before {
+    display: none;
   }
 }
 </style>

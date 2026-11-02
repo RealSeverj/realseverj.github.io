@@ -175,22 +175,28 @@ export function useAudioPlayer() {
     }
   }
 
+  let initPromise = null
+
   async function init() {
-    try {
-      const data = await fetchPlaylist()
-      playlist.value = data.map(toPlayerTrack)
-    } catch (err) {
-      console.warn('获取播放列表失败:', err.message)
-      playlist.value = []
-    }
+    if (initPromise) return initPromise
+    initPromise = (async () => {
+      try {
+        const data = await fetchPlaylist()
+        playlist.value = data.map(toPlayerTrack)
+      } catch (err) {
+        console.warn('获取播放列表失败:', err.message)
+        playlist.value = []
+      }
 
-    if (audioRef.value) {
-      audioRef.value.volume = (volume.value ?? 70) / 100
-    }
+      if (audioRef.value) {
+        audioRef.value.volume = (volume.value ?? 70) / 100
+      }
 
-    if (playlist.value.length > 0) {
-      await loadTrack(0)
-    }
+      if (playlist.value.length > 0 && !currentTrack.value) {
+        await loadTrack(0)
+      }
+    })()
+    return initPromise
   }
 
   function cleanup() {
@@ -232,5 +238,33 @@ export function useAudioPlayer() {
     handlePause,
     handleError,
     handleEnded
+  }
+}
+
+let sharedPlayer = null
+let activeConsumers = 0
+
+export function useSharedAudioPlayer() {
+  if (!sharedPlayer) {
+    sharedPlayer = useAudioPlayer()
+  }
+  return {
+    ...sharedPlayer,
+    mountConsumer(audioEl) {
+      activeConsumers++
+      if (audioEl && !sharedPlayer.audioRef.value) {
+        sharedPlayer.setAudioElement(audioEl)
+      }
+      return sharedPlayer.init()
+    },
+    unmountConsumer(audioEl) {
+      activeConsumers = Math.max(0, activeConsumers - 1)
+      if (audioEl && sharedPlayer.audioRef.value === audioEl) {
+        sharedPlayer.audioRef.value = null
+      }
+      if (activeConsumers === 0) {
+        sharedPlayer.cleanup()
+      }
+    }
   }
 }

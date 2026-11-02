@@ -93,17 +93,22 @@ function onLinkClick(link) {
 .link-section__title-group {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: 0.85rem;
 }
 
 .link-section__badge {
-  padding: 0.25rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.36rem 0.85rem;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: var(--fg-muted);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -112,6 +117,7 @@ h2 {
   margin: 0;
   font-size: clamp(1.4rem, 3.2vw, 1.9rem);
   font-weight: 600;
+  line-height: 1.15;
   color: #ffffff;
   letter-spacing: -0.015em;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
