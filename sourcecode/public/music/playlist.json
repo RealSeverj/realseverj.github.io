@@ -25,9 +25,9 @@
     "artist": "CLOUD_",
     "album": "Awaken (Flay! Remix)",
     "duration": 0,
-    "src": "/music/CLOUD_%3B%20Reichuu%3B%20Flay!%20-%20Awaken%20(feat.%20Reichuu)%20%5BFlay!%20Remix%5D.mp3",
-    "cover": "/music/covers/CLOUD_%3B%20Reichuu%3B%20Flay!%20-%20Awaken%20(feat.%20Reichuu)%20%5BFlay!%20Remix%5D.jpg",
-    "lrc": "/music/CLOUD_%3B%20Reichuu%3B%20Flay!%20-%20Awaken%20(feat.%20Reichuu)%20%5BFlay!%20Remix%5D.lrc"
+    "src": "/music/CLOUD_;%20Reichuu;%20Flay!%20-%20Awaken%20(feat.%20Reichuu)%20%5BFlay!%20Remix%5D.mp3",
+    "cover": "/music/covers/CLOUD_;%20Reichuu;%20Flay!%20-%20Awaken%20(feat.%20Reichuu)%20%5BFlay!%20Remix%5D.jpg",
+    "lrc": "/music/CLOUD_;%20Reichuu;%20Flay!%20-%20Awaken%20(feat.%20Reichuu)%20%5BFlay!%20Remix%5D.lrc"
   },
   {
     "id": "Chill Satellite - For You",
@@ -45,9 +45,9 @@
     "artist": "Cloudier",
     "album": "Our Story",
     "duration": 0,
-    "src": "/music/Cloudier%20-%20Our%20Story%20%5B%2B%20Vocal%20Stem%5D.mp3",
-    "cover": "/music/covers/Cloudier%20-%20Our%20Story%20%5B%2B%20Vocal%20Stem%5D.jpg",
-    "lrc": "/music/Cloudier%20-%20Our%20Story%20%5B%2B%20Vocal%20Stem%5D.lrc"
+    "src": "/music/Cloudier%20-%20Our%20Story%20%5B+%20Vocal%20Stem%5D.mp3",
+    "cover": "/music/covers/Cloudier%20-%20Our%20Story%20%5B+%20Vocal%20Stem%5D.jpg",
+    "lrc": "/music/Cloudier%20-%20Our%20Story%20%5B+%20Vocal%20Stem%5D.lrc"
   },
   {
     "id": "Feint; Elizaveta - Drifters",
@@ -55,9 +55,9 @@
     "artist": "Feint",
     "album": "Drifters",
     "duration": 0,
-    "src": "/music/Feint%3B%20Elizaveta%20-%20Drifters.mp3",
-    "cover": "/music/covers/Feint%3B%20Elizaveta%20-%20Drifters.jpg",
-    "lrc": "/music/Feint%3B%20Elizaveta%20-%20Drifters.lrc"
+    "src": "/music/Feint;%20Elizaveta%20-%20Drifters.mp3",
+    "cover": "/music/covers/Feint;%20Elizaveta%20-%20Drifters.jpg",
+    "lrc": "/music/Feint;%20Elizaveta%20-%20Drifters.lrc"
   },
   {
     "id": "Last Heroes; Woodlock - In My Head",
@@ -65,9 +65,9 @@
     "artist": "Last Heroes",
     "album": "Finding Light",
     "duration": 0,
-    "src": "/music/Last%20Heroes%3B%20Woodlock%20-%20In%20My%20Head.mp3",
-    "cover": "/music/covers/Last%20Heroes%3B%20Woodlock%20-%20In%20My%20Head.jpg",
-    "lrc": "/music/Last%20Heroes%3B%20Woodlock%20-%20In%20My%20Head.lrc"
+    "src": "/music/Last%20Heroes;%20Woodlock%20-%20In%20My%20Head.mp3",
+    "cover": "/music/covers/Last%20Heroes;%20Woodlock%20-%20In%20My%20Head.jpg",
+    "lrc": "/music/Last%20Heroes;%20Woodlock%20-%20In%20My%20Head.lrc"
   },
   {
     "id": "MitiS; Crystal Skies; Monika Santucci - Wait",
@@ -75,9 +75,9 @@
     "artist": "MitiS",
     "album": "Wait",
     "duration": 0,
-    "src": "/music/MitiS%3B%20Crystal%20Skies%3B%20Monika%20Santucci%20-%20Wait.mp3",
-    "cover": "/music/covers/MitiS%3B%20Crystal%20Skies%3B%20Monika%20Santucci%20-%20Wait.jpg",
-    "lrc": "/music/MitiS%3B%20Crystal%20Skies%3B%20Monika%20Santucci%20-%20Wait.lrc"
+    "src": "/music/MitiS;%20Crystal%20Skies;%20Monika%20Santucci%20-%20Wait.mp3",
+    "cover": "/music/covers/MitiS;%20Crystal%20Skies;%20Monika%20Santucci%20-%20Wait.jpg",
+    "lrc": "/music/MitiS;%20Crystal%20Skies;%20Monika%20Santucci%20-%20Wait.lrc"
   },
   {
     "id": "Moon Jelly - Missing",
@@ -95,8 +95,8 @@
     "artist": "NGC 3.14",
     "album": "Polaris (NGC 3.14 Remix)",
     "duration": 0,
-    "src": "/music/NGC%203.14%2CJun%20Kuroda%20-%20Polaris%20(NGC%203.14%20Remix).mp3",
-    "cover": "/music/covers/NGC%203.14%2CJun%20Kuroda%20-%20Polaris%20(NGC%203.14%20Remix).jpg",
+    "src": "/music/NGC%203.14,Jun%20Kuroda%20-%20Polaris%20(NGC%203.14%20Remix).mp3",
+    "cover": "/music/covers/NGC%203.14,Jun%20Kuroda%20-%20Polaris%20(NGC%203.14%20Remix).jpg",
     "lrc": ""
   },
   {
@@ -105,8 +105,8 @@
     "artist": "Outwild",
     "album": "Key (Inukshuk Remix)",
     "duration": 0,
-    "src": "/music/Outwild%2CVirtual%20Self%20-%20Key%20(Inukshuk%20Remix).mp3",
-    "cover": "/music/covers/Outwild%2CVirtual%20Self%20-%20Key%20(Inukshuk%20Remix).jpg",
+    "src": "/music/Outwild,Virtual%20Self%20-%20Key%20(Inukshuk%20Remix).mp3",
+    "cover": "/music/covers/Outwild,Virtual%20Self%20-%20Key%20(Inukshuk%20Remix).jpg",
     "lrc": ""
   },
   {

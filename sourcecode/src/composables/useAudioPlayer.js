@@ -25,6 +25,17 @@ export function useAudioPlayer() {
     return modes[loopMode.value]
   })
 
+  function setAudioElement(el) {
+    audioRef.value = el
+    if (el) {
+      el.volume = (volume.value ?? 70) / 100
+      if (currentTrack.value?.url && (!el.src || el.src === window.location.href)) {
+        el.src = currentTrack.value.url
+        el.load()
+      }
+    }
+  }
+
   async function loadLyric(track) {
     if (!track?.lrc) {
       parsedLyrics.value = []
@@ -53,11 +64,10 @@ export function useAudioPlayer() {
     const track = playlist.value[index]
     currentTrack.value = track
 
-    if (audioRef.value && track.url) {
+    if (track?.url && audioRef.value) {
       audioRef.value.preload = 'metadata'
       audioRef.value.src = track.url
       audioRef.value.load()
-      isPlaying.value = false
       currentTime.value = 0
       duration.value = track.duration || 0
     }
@@ -66,15 +76,30 @@ export function useAudioPlayer() {
   }
 
   async function playTrack(index) {
-    if (currentIndex.value !== index) {
+    if (currentIndex.value !== index || !currentTrack.value) {
       await loadTrack(index)
     }
-    play()
+    await play()
   }
 
-  function play() {
-    audioRef.value?.play()
-    isPlaying.value = true
+  async function play() {
+    if (!audioRef.value) {
+      console.warn('音频引擎尚未就绪')
+      return
+    }
+    const track = currentTrack.value || playlist.value[currentIndex.value]
+    // 兜底：若 audio.src 未设置或与当前音轨不一致，补齐并加载
+    if (track?.url && (!audioRef.value.src || audioRef.value.src === window.location.href)) {
+      audioRef.value.src = track.url
+      audioRef.value.load()
+    }
+    try {
+      await audioRef.value.play()
+      isPlaying.value = true
+    } catch (err) {
+      console.error('音频播放失败:', err)
+      isPlaying.value = false
+    }
   }
 
   function pause() {
@@ -142,10 +167,25 @@ export function useAudioPlayer() {
     }
   }
 
+  function handlePlay() {
+    isPlaying.value = true
+  }
+
+  function handlePause() {
+    isPlaying.value = false
+  }
+
+  function handleError(e) {
+    console.error('原生音频加载错误:', audioRef.value?.error || e)
+    isPlaying.value = false
+  }
+
   function handleEnded() {
     if (loopMode.value === 'one') {
-      audioRef.value.currentTime = 0
-      play()
+      if (audioRef.value) {
+        audioRef.value.currentTime = 0
+        play()
+      }
     } else if (loopMode.value === 'all') {
       nextTrack()
     } else {
@@ -157,11 +197,27 @@ export function useAudioPlayer() {
     }
   }
 
+  async function fetchPlaylist() {
+    const paths = ['/music/playlist.json', 'music/playlist.json', './music/playlist.json']
+    for (const p of paths) {
+      try {
+        const res = await fetch(p)
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || ''
+          if (contentType.includes('html')) continue
+          const data = await res.json()
+          if (Array.isArray(data) && data.length > 0) {
+            return data
+          }
+        }
+      } catch {}
+    }
+    throw new Error('未能从已知路径获取到有效的 playlist.json')
+  }
+
   async function init() {
     try {
-      const res = await fetch('/music/playlist.json')
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json()
+      const data = await fetchPlaylist()
       playlist.value = data.map((item) => ({
         id: item.id,
         url: item.src,
@@ -174,7 +230,7 @@ export function useAudioPlayer() {
         lrc: item.lrc || ''
       }))
     } catch (err) {
-      console.warn('获取播放列表失败:', err)
+      console.warn('获取播放列表失败:', err.message)
       playlist.value = []
     }
 
@@ -193,6 +249,7 @@ export function useAudioPlayer() {
 
   return {
     audioRef,
+    setAudioElement,
     isPlaying,
     currentTime,
     duration,
@@ -221,6 +278,9 @@ export function useAudioPlayer() {
     seek,
     handleTimeUpdate,
     handleLoadedMetadata,
+    handlePlay,
+    handlePause,
+    handleError,
     handleEnded
   }
 }

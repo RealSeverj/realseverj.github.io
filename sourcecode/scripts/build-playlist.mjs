@@ -9,6 +9,11 @@ const coversDir = path.join(musicDir, 'covers')
 
 await mkdir(coversDir, { recursive: true })
 
+function encodePathSegment(name) {
+  // 使用 encodeURI 转义空格与非 ASCII 字符，避免 encodeURIComponent 将 ;/+/, 等路径安全字符过度转义导致静态服务器 404
+  return encodeURI(name).replace(/#/g, '%23').replace(/\?/g, '%3F')
+}
+
 const entries = await readdir(musicDir, { withFileTypes: true })
 const audioFiles = entries
   .filter(e => e.isFile() && /\.(mp3|flac|wav|ogg)$/i.test(e.name))
@@ -57,7 +62,7 @@ for (const fileName of audioFiles) {
         const coverFileName = `${baseName}.${ext}`
         const coverFilePath = path.join(coversDir, coverFileName)
         await writeFile(coverFilePath, Buffer.from(pic.data))
-        coverUrl = `/music/covers/${encodeURIComponent(coverFileName)}`
+        coverUrl = `/music/covers/${encodePathSegment(coverFileName)}`
       }
     }
   } catch (err) {
@@ -67,8 +72,8 @@ for (const fileName of audioFiles) {
   }
 
   const hasLrc = lrcSet.has(baseName)
-  const lrcUrl = hasLrc ? `/music/${encodeURIComponent(baseName)}.lrc` : ''
-  const srcUrl = `/music/${encodeURIComponent(fileName)}`
+  const lrcUrl = hasLrc ? `/music/${encodePathSegment(baseName)}.lrc` : ''
+  const srcUrl = `/music/${encodePathSegment(fileName)}`
 
   playlist.push({
     id: baseName,

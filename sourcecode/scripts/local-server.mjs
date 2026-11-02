@@ -31,6 +31,11 @@ const mime = {
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
   '.ttf': 'font/ttf',
+  '.mp3': 'audio/mpeg',
+  '.wav': 'audio/wav',
+  '.flac': 'audio/flac',
+  '.ogg': 'audio/ogg',
+  '.lrc': 'text/plain; charset=utf-8',
   '.map': 'application/octet-stream'
 }
 
@@ -60,7 +65,13 @@ const server = http.createServer((req, res) => {
   } catch {}
 
   if (!fs.existsSync(filePath)) {
-    // SPA 回退到根 index.html（如 /music 等仍按其自身 index.html 生效）
+    const ext = path.extname(pathname).toLowerCase()
+    // 静态文件（如 json, mp3, js, css 等）不存在时直接返回 404，防止回退 index.html 破坏 API/数据解析
+    if (ext && ext !== '.html' && ext !== '.htm') {
+      send(res, 404, 'Not Found')
+      return
+    }
+    // SPA 回退到根 index.html
     filePath = path.join(root, 'index.html')
   }
 
