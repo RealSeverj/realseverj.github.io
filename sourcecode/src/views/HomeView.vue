@@ -1,52 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue'
 import HeroPanel from '../components/HeroPanel.vue'
 import LinkSection from '../components/LinkSection.vue'
 import ModalFrame from '../components/ModalFrame.vue'
-import site from '../site.config'
-import { loadLinks } from '../lib/links'
+import site from '../site.config.js'
+import { decorateLinks } from '../lib/links.js'
+import { useLinkSections } from '../composables/useLinkSections.js'
+import { useLinkNavigation } from '../composables/useLinkNavigation.js'
 
 const hero = site.hero || {}
-const sections = ref([])
-const loadError = ref('')
-const isLoading = ref(true)
-
-// 组件页小窗打开
-const modalSrc = ref('')
-function isComponentPath(href) {
-    return /^\/components\//.test(href) || href.startsWith('./components/') || href.startsWith('/components/')
-}
-function isExternal(href) { return /^https?:\/\//i.test(href) }
-function decorateLinks(links = []) {
-    return links.map(l => ({ ...l, intercept: isComponentPath(l.href) }))
-}
-function handleLinkClick(link) {
-    const href = link.href || ''
-    if (isComponentPath(href)) {
-        const abs = href.replace(/^\.\//, '/').replace(/^(?!https?:|\/)/, '/')
-        modalSrc.value = abs
-        return
-    }
-    if (isExternal(href)) {
-        window.open(href, '_blank', 'noopener')
-        return
-    }
-    window.location.href = href
-}
-
-async function fetchSections() {
-    isLoading.value = true
-    loadError.value = ''
-    try {
-        sections.value = await loadLinks()
-    } catch (error) {
-        loadError.value = error?.message || '未知错误'
-    } finally {
-        isLoading.value = false
-    }
-}
-
-onMounted(fetchSections)
+const { sections, loadError, fetchSections } = useLinkSections()
+const { modalSrc, handleLinkClick } = useLinkNavigation()
 </script>
 
 <template>

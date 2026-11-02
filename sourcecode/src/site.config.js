@@ -1,7 +1,7 @@
 // 主页外观配置：壁纸与 Hero 文案
 //
 // 链接分组（sections）不在这里配置：统一维护在 public/links.json，
-// 运行时由 src/lib/links.js 读取，避免两处内容互相覆盖。
+// 运行时由 src/services/links.js 读取，避免两处内容互相覆盖。
 
 export default {
   // 壁纸配置：留空时自动使用 /img/backgrounds/background1..10.webp 随机一张；

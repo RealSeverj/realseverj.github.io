@@ -28,6 +28,7 @@
 <script setup>
 import { computed } from 'vue'
 import LinkCard from './LinkCard.vue'
+import { isComponentPath as shouldIntercept } from '../lib/links.js'
 
 const props = defineProps({
   id: {
@@ -60,10 +61,6 @@ const headingId = computed(() => {
 const emit = defineEmits(['link-click'])
 function onLinkClick(link) {
   emit('link-click', link)
-}
-
-function shouldIntercept(href) {
-  return /^\/components\//.test(href) || href.startsWith('./components/') || href.startsWith('/components/')
 }
 </script>
 

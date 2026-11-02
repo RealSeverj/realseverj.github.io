@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import site from '../site.config'
+import site from '../site.config.js'
 
 export function useWallpaper() {
   const wallpaperConfig = site.wallpaper || {}

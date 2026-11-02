@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { formatTime } from '../../lib/format'
+import { formatTime } from '../../lib/format.js'
 
 const props = defineProps({
   isPlaying: { type: Boolean, default: false },

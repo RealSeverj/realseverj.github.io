@@ -1,8 +1,12 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-
-const AMAP_KEY = '19a90f1c901dec314ac2c40ced3031a0'
-const CACHE_KEY = 'severj:weather:v1'
-const CACHE_TTL = 30 * 60 * 1000
+import { getWeatherIconName } from '../lib/weather.js'
+import {
+  WEATHER_CACHE_TTL,
+  readWeatherCache,
+  writeWeatherCache,
+  getLocationByIP,
+  fetchWeather,
+} from '../services/weather.js'
 
 export function useWeather() {
   const weather = ref(null)
@@ -12,54 +16,19 @@ export function useWeather() {
   let weatherTimer = null
 
   function readCache() {
-    try {
-      const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null')
-      if (!cached?.weather?.city || !cached?.adcode || !Number.isFinite(cached.time)) return false
-      weather.value = cached.weather
-      adcode.value = cached.adcode
-      return Date.now() - cached.time < CACHE_TTL
-    } catch {
-      return false
-    }
+    const cached = readWeatherCache()
+    if (!cached) return false
+    weather.value = cached.weather
+    adcode.value = cached.adcode
+    return cached.fresh
   }
 
-  const weatherIconName = computed(() => {
-    if (!weather.value) return 'cloud'
-    const w = weather.value.weather || ''
-    if (w.includes('晴')) return 'sun'
-    if (w.includes('云')) return 'cloud-sun'
-    if (w.includes('阴')) return 'cloud'
-    if (w.includes('雨')) return 'rain'
-    if (w.includes('雪')) return 'snow'
-    if (w.includes('雾') || w.includes('霾')) return 'fog'
-    if (w.includes('雷')) return 'thunder'
-    return 'cloud'
-  })
+  const weatherIconName = computed(() => getWeatherIconName(weather.value))
 
-  async function getLocationByIP() {
-    if (!AMAP_KEY) throw new Error('请配置高德 API Key')
-    const res = await fetch(`https://restapi.amap.com/v3/ip?key=${AMAP_KEY}`)
-    const data = await res.json()
-    if (data.status === '1' && data.adcode) {
-      adcode.value = data.adcode
-      return data.adcode
-    }
-    throw new Error(data.info || '定位失败')
-  }
-
-  async function fetchWeather(cityCode) {
-    if (!AMAP_KEY) throw new Error('请配置高德 API Key')
-    const res = await fetch(`https://restapi.amap.com/v3/weather/weatherInfo?key=${AMAP_KEY}&city=${cityCode}`)
-    const data = await res.json()
-    if (data.status === '1' && data.lives && data.lives.length > 0) {
-      weather.value = data.lives[0]
-      error.value = ''
-      try {
-        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ weather: weather.value, adcode: cityCode, time: Date.now() }))
-      } catch { /* Weather still works when browser storage is unavailable. */ }
-    } else {
-      throw new Error(data.info || '获取天气失败')
-    }
+  async function refreshWeather(cityCode) {
+    weather.value = await fetchWeather(cityCode)
+    error.value = ''
+    writeWeatherCache(weather.value, cityCode)
   }
 
   async function initWeather() {
@@ -67,7 +36,8 @@ export function useWeather() {
     error.value = ''
     try {
       const cityCode = await getLocationByIP()
-      await fetchWeather(cityCode)
+      adcode.value = cityCode
+      await refreshWeather(cityCode)
     } catch (err) {
       console.error('天气获取失败:', err)
       error.value = '天气暂时不可用'
@@ -85,9 +55,9 @@ export function useWeather() {
     else initWeather()
     weatherTimer = setInterval(() => {
       if (adcode.value) {
-        fetchWeather(adcode.value).catch(console.error)
+        refreshWeather(adcode.value).catch(console.error)
       }
-    }, 30 * 60 * 1000)
+    }, WEATHER_CACHE_TTL)
   })
 
   onUnmounted(() => {

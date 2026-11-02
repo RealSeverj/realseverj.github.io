@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
-import { parseLyric, findCurrentLyricIndex } from '../lib/lyric'
+import { fetchPlaylist, toPlayerTrack } from '../services/playlist.js'
+import { usePlayerLyrics } from './usePlayerLyrics.js'
 
 export function useAudioPlayer() {
   const audioRef = ref(null)
@@ -9,8 +10,7 @@ export function useAudioPlayer() {
   const currentIndex = ref(0)
   const playlist = ref([])
   const currentTrack = ref(null)
-  const parsedLyrics = ref([])
-  const currentLyricIndex = ref(-1)
+  const { parsedLyrics, currentLyricIndex, loadLyric, updateLyric } = usePlayerLyrics()
   const loopMode = ref('all')
   const volume = ref(70)
   const isMuted = ref(false)
@@ -33,28 +33,6 @@ export function useAudioPlayer() {
         el.src = currentTrack.value.url
         el.load()
       }
-    }
-  }
-
-  async function loadLyric(track) {
-    if (!track?.lrc) {
-      parsedLyrics.value = []
-      currentLyricIndex.value = -1
-      return
-    }
-    try {
-      const res = await fetch(track.lrc)
-      if (res.ok) {
-        const lrcText = await res.text()
-        parsedLyrics.value = parseLyric(lrcText)
-      } else {
-        parsedLyrics.value = []
-      }
-      currentLyricIndex.value = -1
-    } catch (err) {
-      console.warn('加载歌词失败:', err)
-      parsedLyrics.value = []
-      currentLyricIndex.value = -1
     }
   }
 
@@ -149,7 +127,7 @@ export function useAudioPlayer() {
   function handleTimeUpdate() {
     if (!audioRef.value) return
     currentTime.value = audioRef.value.currentTime
-    currentLyricIndex.value = findCurrentLyricIndex(parsedLyrics.value, currentTime.value)
+    updateLyric(currentTime.value)
 
     if (audioRef.value.buffered.length > 0 && duration.value > 0) {
       const end = audioRef.value.buffered.end(audioRef.value.buffered.length - 1)
@@ -197,38 +175,10 @@ export function useAudioPlayer() {
     }
   }
 
-  async function fetchPlaylist() {
-    const paths = ['/music/playlist.json', 'music/playlist.json', './music/playlist.json']
-    for (const p of paths) {
-      try {
-        const res = await fetch(p)
-        if (res.ok) {
-          const contentType = res.headers.get('content-type') || ''
-          if (contentType.includes('html')) continue
-          const data = await res.json()
-          if (Array.isArray(data) && data.length > 0) {
-            return data
-          }
-        }
-      } catch {}
-    }
-    throw new Error('未能从已知路径获取到有效的 playlist.json')
-  }
-
   async function init() {
     try {
       const data = await fetchPlaylist()
-      playlist.value = data.map((item) => ({
-        id: item.id,
-        url: item.src,
-        path: item.src,
-        title: item.title,
-        artist: item.artist,
-        album: item.album || '',
-        duration: item.duration || 0,
-        cover: item.cover || '',
-        lrc: item.lrc || ''
-      }))
+      playlist.value = data.map(toPlayerTrack)
     } catch (err) {
       console.warn('获取播放列表失败:', err.message)
       playlist.value = []

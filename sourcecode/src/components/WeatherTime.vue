@@ -52,8 +52,8 @@
 <script setup>
 import WeatherIcon from './WeatherIcon.vue'
 import { computed } from 'vue'
-import { useClock } from '../composables/useClock'
-import { useWeather } from '../composables/useWeather'
+import { useClock } from '../composables/useClock.js'
+import { useWeather } from '../composables/useWeather.js'
 
 defineProps({
   ambient: { type: Boolean, default: false },

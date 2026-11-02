@@ -5,9 +5,9 @@ import PetalBreeze from './components/PetalBreeze.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 import WeatherTime from './components/WeatherTime.vue'
 import HomeView from './views/HomeView.vue'
-import { useWallpaper } from './composables/useWallpaper'
-import { useSpotlight } from './composables/useSpotlight'
-import { useSceneScroll } from './composables/useSceneScroll'
+import { useWallpaper } from './composables/useWallpaper.js'
+import { useSpotlight } from './composables/useSpotlight.js'
+import { useSceneScroll } from './composables/useSceneScroll.js'
 
 const root = ref(null)
 const opening = ref(null)

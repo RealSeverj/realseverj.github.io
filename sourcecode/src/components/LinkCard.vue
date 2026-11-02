@@ -29,6 +29,7 @@
 <script setup>
 import { computed } from 'vue'
 import SiteIcon from './SiteIcon.vue'
+import { isExternalUrl, inferLinkIcon, resolveLinkImage } from '../lib/links.js'
 
 const props = defineProps({
   label: { type: String, required: true },
@@ -41,32 +42,11 @@ const props = defineProps({
   intercept: { type: Boolean, default: false }
 })
 
-const isExternal = computed(() => /^(http|https):\/\//i.test(props.href))
+const isExternal = computed(() => isExternalUrl(props.href))
 const emit = defineEmits(['open'])
 
-// 智能推断缺省图标名称
-const iconName = computed(() => {
-  if (props.icon) return props.icon
-  const text = `${props.label || ''} ${props.description || ''}`
-  if (text.includes('缓存') || text.includes('Cache')) return 'cache'
-  if (text.includes('概率') || text.includes('MathDis')) return 'math'
-  if (text.includes('图形') || text.includes('Graph')) return 'chart'
-  if (text.includes('音乐') || text.includes('Musi')) return 'music'
-  if (text.includes('解锁') || text.includes('Unlock')) return 'unlock'
-  if (text.includes('导航') || text.includes('Nav')) return 'compass'
-  if (text.includes('翻译') || text.includes('Trans')) return 'translate'
-  if (text.includes('博客')) return 'blog'
-  if (text.includes('公众号')) return 'newspaper'
-  return 'link'
-})
-
-// Resolve image if provided (supports public directory paths or absolute URLs)
-const imageSrc = computed(() => {
-  if (!props.image) return ''
-  if (/^https?:\/\//i.test(props.image)) return props.image
-  if (props.image.startsWith('/')) return props.image
-  return `/${props.image}`
-})
+const iconName = computed(() => inferLinkIcon(props))
+const imageSrc = computed(() => resolveLinkImage(props.image))
 
 function onClick(e) {
   if (props.intercept) {

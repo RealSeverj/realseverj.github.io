@@ -66,7 +66,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { findSection, loadLinks } from '../lib/links'
+import { findSection, isExternalUrl } from '../lib/links.js'
+import { loadLinks } from '../services/links.js'
 
 const isMinimized = ref(false)
 const articles = ref([])
@@ -77,7 +78,7 @@ function toggleMinimize() {
 
 function openArticle(article) {
   if (article.href) {
-    if (/^https?:\/\//i.test(article.href)) {
+    if (isExternalUrl(article.href)) {
       window.open(article.href, '_blank', 'noopener,noreferrer')
     } else {
       window.location.href = article.href

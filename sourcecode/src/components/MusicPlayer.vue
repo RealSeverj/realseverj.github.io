@@ -127,9 +127,10 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, onUnmounted } from 'vue'
-import { useAudioPlayer } from '../composables/useAudioPlayer'
-import { formatTime } from '../lib/format'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useAudioPlayer } from '../composables/useAudioPlayer.js'
+import { useMusicDetails } from '../composables/useMusicDetails.js'
+import { formatTime } from '../lib/format.js'
 import MusicControls from './music/MusicControls.vue'
 import MusicLyrics from './music/MusicLyrics.vue'
 import MusicPlaylist from './music/MusicPlaylist.vue'
@@ -138,42 +139,9 @@ defineProps({
   ambient: { type: Boolean, default: false },
   lyricsTarget: { type: String, default: '' }
 })
-const container = ref(null)
-const detailsToggle = ref(null)
-const detailsClose = ref(null)
 const nativeAudio = ref(null)
-const showDetails = ref(false)
 const isMinimized = ref(false)
 
-function closeDetails(restoreFocus = false) {
-  showDetails.value = false
-  if (restoreFocus) detailsToggle.value?.focus({ preventScroll: true })
-}
-
-async function toggleDetails() {
-  if (showDetails.value) {
-    closeDetails()
-    return
-  }
-  showDetails.value = true
-  await nextTick()
-  detailsClose.value?.focus({ preventScroll: true })
-}
-
-function onOutsidePointer(event) {
-  if (showDetails.value && !container.value?.contains(event.target)) closeDetails()
-}
-
-function onKeydown(event) {
-  if (event.key === 'Escape' && showDetails.value) {
-    event.preventDefault()
-    closeDetails(true)
-  }
-}
-
-function onPageScroll() {
-  if (showDetails.value) closeDetails()
-}
 function toggleMinimize() {
   isMinimized.value = !isMinimized.value
 }
@@ -181,21 +149,12 @@ function toggleMinimize() {
 const player = useAudioPlayer()
 
 onMounted(() => {
-  if (nativeAudio.value) {
-    player.setAudioElement(nativeAudio.value)
-  }
+  if (nativeAudio.value) player.setAudioElement(nativeAudio.value)
   player.init()
-  document.addEventListener('pointerdown', onOutsidePointer)
-  document.addEventListener('keydown', onKeydown)
-  window.addEventListener('scroll', onPageScroll, { passive: true })
 })
+onUnmounted(player.cleanup)
 
-onUnmounted(() => {
-  player.cleanup()
-  document.removeEventListener('pointerdown', onOutsidePointer)
-  document.removeEventListener('keydown', onKeydown)
-  window.removeEventListener('scroll', onPageScroll)
-})
+const { container, detailsToggle, detailsClose, showDetails, closeDetails, toggleDetails } = useMusicDetails()
 </script>
 
 <style scoped>
