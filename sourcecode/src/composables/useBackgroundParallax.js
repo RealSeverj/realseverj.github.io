@@ -9,6 +9,10 @@ export function useBackgroundParallax(stageRef) {
   let rafId = 0
   let isReduced = false
 
+  function startLoop() {
+    if (!rafId) rafId = requestAnimationFrame(updateParallax)
+  }
+
   function onPointerMove(e) {
     if (isReduced) return
     if (e.pointerType === 'touch') return
@@ -19,6 +23,7 @@ export function useBackgroundParallax(stageRef) {
     // 最大位移仅 ±10px 反向微视差，克制且平稳
     targetX = -nx * 10
     targetY = -ny * 8
+    startLoop()
   }
 
   function updateParallax() {
@@ -29,19 +34,27 @@ export function useBackgroundParallax(stageRef) {
       stageRef.value.style.setProperty('--parallax-x', `${currentX.toFixed(2)}px`)
       stageRef.value.style.setProperty('--parallax-y', `${currentY.toFixed(2)}px`)
     }
-    rafId = requestAnimationFrame(updateParallax)
+
+    if (Math.abs(targetX - currentX) > 0.02 || Math.abs(targetY - currentY) > 0.02) {
+      rafId = requestAnimationFrame(updateParallax)
+    } else {
+      rafId = 0
+    }
   }
 
   onMounted(() => {
     isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (!isReduced) {
       window.addEventListener('pointermove', onPointerMove, { passive: true })
-      rafId = requestAnimationFrame(updateParallax)
+      startLoop()
     }
   })
 
   onUnmounted(() => {
     window.removeEventListener('pointermove', onPointerMove)
-    if (rafId) cancelAnimationFrame(rafId)
+    if (rafId) {
+      cancelAnimationFrame(rafId)
+      rafId = 0
+    }
   })
 }

@@ -1,1 +1,0 @@
-var e=`/assets/SHIKI%20-%20Pure%20Ruby-mvMTbNQY.mp3`;export{e as default};

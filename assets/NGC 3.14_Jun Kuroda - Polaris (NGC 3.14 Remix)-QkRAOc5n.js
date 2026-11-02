@@ -1,1 +1,0 @@
-var e=`/assets/NGC%203.14_Jun%20Kuroda%20-%20Polaris%20(NGC%203.14%20Remix)-CJqTlzkO.mp3`;export{e as default};

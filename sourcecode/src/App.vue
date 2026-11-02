@@ -1,37 +1,36 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import BackgroundStage from './components/BackgroundStage.vue'
 import PetalBreeze from './components/PetalBreeze.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 import WeatherTime from './components/WeatherTime.vue'
 import HomeView from './views/HomeView.vue'
-import { useWallpaper } from './composables/useWallpaper.js'
+import site from './site.config.js'
 import { useSpotlight } from './composables/useSpotlight.js'
 import { useSceneScroll } from './composables/useSceneScroll.js'
 
 const root = ref(null)
 const opening = ref(null)
 const content = ref(null)
-const { wallpaperConfig, selectedImage, pickRandomIndex } = useWallpaper()
+const wallpaper = site.wallpaper
 
 useSpotlight(root)
 useSceneScroll(root, opening, content)
-onMounted(pickRandomIndex)
 </script>
 
 <template>
   <div ref="root" class="page">
-    <BackgroundStage :image="selectedImage" :blur="wallpaperConfig.blur" :overlay="wallpaperConfig.overlay" />
+    <BackgroundStage :image="wallpaper.image" :blur="wallpaper.blur" :overlay="wallpaper.overlay" />
     <PetalBreeze />
     <a class="skip-link" href="#discover">跳到主页内容</a>
 
     <header class="header">
-      <a class="brand" href="#opening" aria-label="Severj.top，回到花田">Severj<span>.top</span></a>
+      <a class="brand" href="#opening" aria-label="Severj.top，返回主页">Severj<span>.top</span></a>
       <nav class="header__nav" aria-label="主导航">
         <a href="#site">站点</a>
         <a href="#friends">朋友</a>
         <a href="#articles">文章</a>
-        <a class="back-to-scene" href="#opening">回到花田 <span aria-hidden="true">↗</span></a>
+        <a class="back-to-scene" href="#opening">返回主页</a>
       </nav>
     </header>
 
@@ -39,17 +38,17 @@ onMounted(pickRandomIndex)
       <div class="opening__time">
         <WeatherTime ambient />
         <p class="opening__tagline">A Place No One Has Found</p>
+        <a class="scroll-cue" href="#discover">
+          <span>向下滚动，随处逛逛</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M12 4v15m-5-5 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
       </div>
       <div id="opening-lyrics" class="opening__lyrics" aria-label="当前歌词"></div>
       <div class="opening__music">
         <MusicPlayer ambient lyrics-target="#opening-lyrics" />
       </div>
-      <a class="scroll-cue" href="#discover">
-        <span>向下滚动，随处逛逛</span>
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <path d="M12 4v15m-5-5 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </a>
       <span class="scene-caption">我挚爱的时光</span>
     </section>
 
@@ -57,7 +56,7 @@ onMounted(pickRandomIndex)
       <HomeView />
     </main>
     <footer class="footer">
-      <a class="footer__home" href="#opening">Severj.top <span aria-hidden="true">↑</span></a>
+      <a class="footer__home" href="#opening">返回主页</a>
       <span>© {{ new Date().getFullYear() }} Severj.top</span>
       <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">闽ICP备2025122655号</a>
     </footer>
@@ -68,10 +67,13 @@ onMounted(pickRandomIndex)
 .page {
   --scene-progress: 0;
   --scene-ink: rgba(248, 253, 255, 0.96);
-  --nav-ink: rgb(220, 246, 253);
   --scene-text-shadow:
-    0 1px 5px rgba(16, 48, 64, calc((1 - var(--scene-progress)) * 0.38)),
-    0 4px 16px rgba(16, 48, 64, calc((1 - var(--scene-progress)) * 0.2));
+    0 1px 5px rgba(16, 48, 64, calc((1 - var(--scene-progress)) * 0.5)),
+    0 4px 16px rgba(16, 48, 64, calc((1 - var(--scene-progress)) * 0.3));
+  /* 首屏统一左右边距：品牌、时钟、歌词、播放器共用 */
+  --gutter: clamp(36px, 7vw, 140px);
+  /* 第二屏内容容器（min(1200px, 90%)）的左边缘 */
+  --content-inset: max(5%, calc((100% - 1200px) / 2));
   position: relative;
   isolation: isolate;
   min-height: 100vh;
@@ -82,7 +84,8 @@ onMounted(pickRandomIndex)
   inset: 0 0 auto;
   z-index: 20;
   min-height: 84px;
-  padding: 0 clamp(24px, 5vw, 96px);
+  /* 首屏对齐时钟左缘，滚入第二屏后平滑过渡到内容容器左缘 */
+  padding: 0 calc(var(--gutter) * (1 - var(--scene-progress)) + var(--content-inset) * var(--scene-progress));
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -95,8 +98,9 @@ onMounted(pickRandomIndex)
   position: absolute;
   inset: 0;
   z-index: -1;
+  /* 亮色壁纸上也要托住文字：顶部始终保留一层很淡的深色渐变，滚动后加深 */
   background: linear-gradient(rgba(9, 21, 29, 0.9), rgba(9, 21, 29, 0));
-  opacity: var(--scene-progress);
+  opacity: calc(0.3 + var(--scene-progress) * 0.7);
   pointer-events: none;
 }
 .brand {
@@ -116,18 +120,22 @@ onMounted(pickRandomIndex)
   align-items: center;
   gap: 4px;
   padding: 4px 6px;
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, calc(0.18 - var(--scene-progress) * 0.13)) 0%,
-    rgba(255, 255, 255, calc(0.06 - var(--scene-progress) * 0.04)) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, calc(0.32 - var(--scene-progress) * 0.18));
+  /* 玻璃上叠一层深青色着色：亮背景下提供对比度，暗背景下几乎不可见，保持原有的通透感 */
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, calc(0.14 - var(--scene-progress) * 0.09)) 0%,
+      rgba(255, 255, 255, calc(0.04 - var(--scene-progress) * 0.02)) 100%
+    ),
+    rgba(14, 40, 58, calc(0.36 - var(--scene-progress) * 0.14));
+  border: 1px solid rgba(255, 255, 255, calc(0.3 - var(--scene-progress) * 0.14));
   border-radius: var(--radius-pill);
-  backdrop-filter: blur(10px) saturate(115%);
-  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, calc(0.38 - var(--scene-progress) * 0.16)),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    inset 0 1px 1px 0 rgba(255, 255, 255, calc(0.34 - var(--scene-progress) * 0.14)),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 4px 18px rgba(8, 28, 40, calc(0.16 * (1 - var(--scene-progress))));
   font-size: 0.88rem;
   line-height: 1.5;
   transition: border-color var(--dur-base) ease, box-shadow var(--dur-base) ease;
@@ -142,11 +150,11 @@ onMounted(pickRandomIndex)
   position: relative;
   padding: 6px 15px;
   border-radius: var(--radius-pill);
-  color: var(--nav-ink);
+  color: rgb(220, 245, 253);
   font-weight: 500;
   letter-spacing: 0.03em;
   white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(14, 42, 56, 0.16);
+  text-shadow: 0 1px 4px rgba(8, 28, 40, 0.5);
   transition: background var(--dur-fast) ease, color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
 }
 .header__nav a:hover {
@@ -168,7 +176,6 @@ onMounted(pickRandomIndex)
   opacity: 0.22;
   transform: translateY(-50%);
 }
-.back-to-scene span { margin-left: 5px; opacity: 0.75; }
 .opening {
   position: relative;
   height: 100vh;
@@ -179,7 +186,7 @@ onMounted(pickRandomIndex)
 .opening__time {
   position: absolute;
   top: 23%;
-  left: clamp(36px, 7vw, 140px);
+  left: var(--gutter);
   opacity: var(--intro-opacity, 1);
   transform: translate3d(0, calc(var(--scene-progress) * -22px), 0);
   will-change: transform, opacity;
@@ -199,7 +206,7 @@ onMounted(pickRandomIndex)
 }
 .opening__lyrics {
   position: absolute;
-  left: clamp(36px, 7vw, 140px);
+  left: var(--gutter);
   bottom: 208px;
   width: min(600px, 44vw);
   opacity: var(--intro-opacity, 1);
@@ -210,29 +217,27 @@ onMounted(pickRandomIndex)
 .opening__music {
   position: absolute;
   z-index: 10;
-  left: clamp(36px, 7vw, 140px);
+  left: var(--gutter);
   bottom: 62px;
   width: min(400px, 40vw);
 }
+/* 滚动提示：收进左栏，紧跟标语，避开画面中心的人物与书本 */
 .scroll-cue {
-  position: absolute;
-  bottom: 44px;
-  left: 50%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  flex-direction: column;
-  gap: 14px;
-  transform: translate3d(-50%, calc(var(--scene-progress) * -14px), 0);
-  will-change: transform, opacity;
-  font-size: 0.75rem;
+  gap: 10px;
+  margin-top: 22px;
+  font-size: 0.78rem;
   letter-spacing: 0.12em;
-  color: #f3fbff;
+  color: rgba(243, 251, 255, 0.88);
   text-shadow: 0 1px 7px rgba(16, 43, 56, 0.55);
-  opacity: var(--intro-opacity, 1);
+  transition: color 180ms ease;
 }
+.scroll-cue:hover { color: #ffffff; }
 .scroll-cue svg { transition: transform 200ms ease; }
-.scroll-cue:hover svg { transform: translateY(4px); }
-.scene-caption { position: absolute; right: 5vw; bottom: 46px; font-size: 0.74rem; letter-spacing: 0.22em; color: rgba(245, 251, 253, 0.8); text-shadow: 0 1px 8px rgba(20, 45, 59, 0.5); }
+.scroll-cue:hover svg { transform: translateY(3px); }
+/* 与左下角播放器底边对齐到同一条基线 */
+.scene-caption { position: absolute; right: var(--gutter); bottom: 62px; font-size: 0.74rem; letter-spacing: 0.22em; color: rgba(245, 251, 253, 0.8); text-shadow: 0 1px 8px rgba(20, 45, 59, 0.5); }
 .main { position: relative; width: min(1200px, 90%); margin: 0 auto; padding: 76px 0 48px; scroll-margin-top: 24px; }
 .footer {
   position: relative;
@@ -247,22 +252,23 @@ onMounted(pickRandomIndex)
   color: var(--fg-subtle);
   font-size: 0.75rem;
 }
-.footer__home { margin-right: auto; color: var(--fg); font-size: 0.9rem; }
-.footer__home span { margin-left: 12px; }
+.footer__home { margin-right: auto; color: var(--fg); font-size: 0.9rem; letter-spacing: 0.04em; transition: color 180ms ease; }
 .footer a:hover { color: var(--fg-strong); }
 .skip-link { position: fixed; z-index: 50; top: 12px; left: 12px; padding: 10px 16px; background: #153743; color: white; transform: translateY(-150%); border-radius: 6px; }
 .skip-link:focus { transform: translateY(0); }
 @media (max-width: 768px) {
-  .header { min-height: 72px; padding-inline: 20px; justify-content: space-between; gap: 12px; }
+  /* 移动端首屏与内容区（90% 宽）统一使用 5% 边距 */
+  .page { --gutter: 5%; }
+  .header { min-height: 72px; justify-content: space-between; gap: 12px; }
   .header__nav { padding: 3px 5px; gap: 2px; }
   .header__nav a { padding: 6px 12px; font-size: 0.82rem; }
   .back-to-scene { display: none; }
   .opening { min-height: 560px; }
-  .opening__time { top: 23%; left: 7%; }
+  .opening__time { top: 23%; }
   .opening__tagline { font-size: 1.02rem; letter-spacing: 0.045em; margin-top: 22px; }
-  .opening__music { left: 7%; bottom: 118px; width: min(360px, 86%); }
-  .opening__lyrics { left: 7%; bottom: 254px; width: 86%; }
-  .scroll-cue { bottom: 30px; width: max-content; }
+  .opening__music { bottom: 118px; width: min(360px, 90%); }
+  .opening__lyrics { bottom: 254px; width: 90%; }
+  .scroll-cue { margin-top: 18px; }
   .scene-caption { display: none; }
   .main { width: 90%; padding-top: 40px; }
   .footer { width: 90%; gap: 12px 20px; }

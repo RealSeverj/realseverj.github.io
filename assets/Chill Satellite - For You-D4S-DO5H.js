@@ -1,1 +1,0 @@
-var e=`/assets/Chill%20Satellite%20-%20For%20You-DDEtWa23.mp3`;export{e as default};

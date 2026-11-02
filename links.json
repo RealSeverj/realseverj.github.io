@@ -4,16 +4,15 @@
       "id": "site",
       "badge": "Site",
       "title": "站点入口",
-      "description": "常用入口与独立页面，集中在此",
       "links": [
-        { "label": "缓存分析 CacheWhat", "href": "/components/CacheWhat/", "icon": "cache", "description": "CacheWhat" },
-        { "label": "数学演示 MathDis", "href": "/components/MathDis/", "icon": "math", "description": "Math Dis" },
-        { "label": "图形数学 MathwithGraph", "href": "/components/MathwithGraph/", "icon": "chart", "description": "Math with Graph" },
-        { "label": "音乐播放 MusiGrace", "href": "/components/MusiGrace/", "icon": "music", "description": "MusiGrace" },
-        { "label": "音乐解锁 MusicUnlock", "href": "/components/MusicUnlock/", "icon": "unlock", "description": "Music Unlock" },
+        { "label": "缓存分析", "href": "/components/CacheWhat/", "icon": "cache", "description": "CacheWhat" },
+        { "label": "数学演示", "href": "/components/MathDis/", "icon": "math", "description": "MathDis" },
+        { "label": "图形数学", "href": "/components/MathwithGraph/", "icon": "chart", "description": "MathwithGraph" },
+        { "label": "音乐播放", "href": "/components/MusiGrace/", "icon": "music", "description": "MusiGrace" },
+        { "label": "音乐解锁", "href": "/components/MusicUnlock/", "icon": "unlock", "description": "MusicUnlock" },
         { "label": "导航页", "href": "/components/Navfore/", "icon": "compass", "description": "Navfore" },
         { "label": "翻译器", "href": "/components/TransToWhat/", "icon": "translate", "description": "TransToWhat" },
-        { "label": "博客", "href": "https://www.cnblogs.com/Severj", "icon": "blog", "description": "外部博客" },
+        { "label": "博客", "href": "https://www.cnblogs.com/Severj", "icon": "blog", "description": "博客园" },
         { "label": "公众号", "href": "https://mp.weixin.qq.com/s/KeUQrukPCCm_neH55cQb9A?token=466519641&lang=zh_CN", "icon": "newspaper", "description": "微信公众号文章" }
       ]
     },
@@ -21,7 +20,6 @@
       "id": "friends",
       "badge": "Friends",
       "title": "我的朋友们",
-      "description": "为好朋友们编写的纪念页面",
       "links": [
         { "label": "Afffections", "href": "/components/MyFriends/rose/", "image": "img/1.jpg", "description": "蔷薇", "highlight": true },
         { "label": "Lemon", "href": "/components/MyFriends/lemon/", "image": "img/2.jpg", "description": "纱雾柠檬" },
@@ -33,7 +31,6 @@
       "id": "articles",
       "badge": "Articles",
       "title": "精选文章",
-      "description": "技术分享与个人思考",
       "links": [
         {
           "title": "失去结果的世界",
@@ -41,7 +38,8 @@
           "href": "https://mp.weixin.qq.com/s/bgKydW2P-1EFOOYCZyjdZA",
           "date": "2026-10-16",
           "category": "随笔",
-          "icon": "thought"
+          "icon": "thought",
+          "image": "img/backgrounds/background2.webp"
         },
         {
           "title": "岛",
@@ -49,7 +47,8 @@
           "href": "https://mp.weixin.qq.com/s/mHYABEoLJYzClDDnRIIeYw",
           "date": "2026-04-04",
           "category": "旅记",
-          "icon": "island"
+          "icon": "island",
+          "image": "img/backgrounds/background5.webp"
         },
         {
           "title": "鸟儿",
@@ -57,7 +56,8 @@
           "href": "https://mp.weixin.qq.com/s/7Keqi_-OKYqGZ4DJRC9I2w",
           "date": "2025-06-15",
           "category": "随笔",
-          "icon": "bird"
+          "icon": "bird",
+          "image": "img/backgrounds/background1.webp"
         },
         {
           "title": "高考十日记 | 5.31",
@@ -65,7 +65,8 @@
           "href": "https://mp.weixin.qq.com/s/8bdonbf9Ke2Pd0IH8Yy6fQ",
           "date": "2024-3-14",
           "category": "校园生活",
-          "icon": "calendar"
+          "icon": "calendar",
+          "image": "img/backgrounds/background9.webp"
         },
         {
           "title": "996，灵与肉",
@@ -73,7 +74,8 @@
           "href": "https://mp.weixin.qq.com/s/x4snX8QJAMHyUu6a5d3b8w",
           "date": "2024-7-14",
           "category": "校园生活",
-          "icon": "hourglass"
+          "icon": "hourglass",
+          "image": "img/backgrounds/background8.webp"
         },
         {
           "title": "Never Ending Tales",
@@ -81,7 +83,8 @@
           "href": "https://mp.weixin.qq.com/s/wu9_v_bNzOaACv1c0w3kiw",
           "date": "2025-1-31",
           "category": "校园生活",
-          "icon": "sparkles"
+          "icon": "sparkles",
+          "image": "img/backgrounds/background7.webp"
         },
         {
           "title": "面向FZU——如何在VSCode中使用fzuasm",
@@ -89,7 +92,8 @@
           "href": "https://www.cnblogs.com/Severj/p/18737211",
           "date": "2025-2-25",
           "category": "校园生活",
-          "icon": "terminal"
+          "icon": "terminal",
+          "image": "img/backgrounds/background10.webp"
         },
         {
           "title": "纪行·延平",
@@ -97,7 +101,8 @@
           "href": "https://mp.weixin.qq.com/s/qhOlQhVJF4wCoukxPHHqqw",
           "date": "2025-5-11",
           "category": "旅记",
-          "icon": "mountain"
+          "icon": "mountain",
+          "image": "img/backgrounds/background4.webp"
         }
       ]
     }

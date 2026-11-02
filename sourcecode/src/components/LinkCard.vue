@@ -64,13 +64,11 @@ function onClick(e) {
   padding: 13px 15px;
   text-decoration: none;
   color: var(--fg);
+  /* 内层卡片保持扁平：外层分区面板已经是玻璃，这里不再叠加模糊与内高光 */
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  backdrop-filter: var(--blur-sm) saturate(130%);
-  -webkit-backdrop-filter: var(--blur-sm) saturate(130%);
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   overflow: hidden;
-  transition: transform var(--dur-base) ease, box-shadow var(--dur-base) ease, border-color var(--dur-base) ease, background var(--dur-base) ease;
+  transition: transform var(--dur-base) ease, border-color var(--dur-base) ease, background var(--dur-base) ease;
   will-change: transform;
 }
 
@@ -92,21 +90,18 @@ function onClick(e) {
 
 .link-card:hover {
   transform: translateY(-2px);
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.38), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.2);
   background: var(--card-bg-hover);
 }
 
 .link-card--highlight {
-  border-color: rgba(254, 240, 138, 0.35);
+  border-color: rgba(254, 240, 138, 0.26);
   background: var(--card-highlight-bg);
-  box-shadow: inset 0 1px 1px 0 rgba(254, 240, 138, 0.28), inset 0 0 0 1px rgba(254, 240, 138, 0.1);
 }
 
 .link-card--highlight:hover {
-  border-color: rgba(254, 240, 138, 0.65);
+  border-color: rgba(254, 240, 138, 0.5);
   background: var(--card-highlight-bg-hover);
-  box-shadow: inset 0 1px 1px 0 rgba(254, 240, 138, 0.45), inset 0 0 0 1px rgba(254, 240, 138, 0.18);
 }
 
 .link-card__inner {
@@ -122,9 +117,8 @@ function onClick(e) {
   border-radius: var(--radius-md);
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--fg);
   transition: transform var(--dur-fast) ease, background var(--dur-fast) ease, color var(--dur-fast) ease;
 }
@@ -183,5 +177,19 @@ function onClick(e) {
   opacity: 1;
   color: #ffffff;
   transform: translateX(2px);
+}
+
+/* 有悬停能力的设备上，箭头默认隐藏，悬停或键盘聚焦时滑入；触屏设备保持常显 */
+@media (hover: hover) {
+  .link-card__icon {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+
+  .link-card:focus-visible .link-card__icon {
+    opacity: 1;
+    color: #ffffff;
+    transform: translateX(2px);
+  }
 }
 </style>

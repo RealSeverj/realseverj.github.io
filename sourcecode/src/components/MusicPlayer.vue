@@ -132,101 +132,44 @@
       </header>
 
       <div class="player-body">
-        <!-- 顶部无框平铺控制区：封面 + 曲目 + 播放按钮同一行，下方紧跟进度条 -->
-        <div class="player-stage">
-          <div class="now-playing">
-            <div class="track-cover">
-              <img
-                v-if="player.currentTrack.value?.cover"
-                :src="player.currentTrack.value.cover"
-                alt="封面"
-              />
-              <svg v-else viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-                <path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
-              </svg>
-            </div>
+        <!-- 当前曲目状态行：播放/暂停与循环；上一曲、下一曲、进度条在首屏播放器 -->
+        <div class="now-row">
+          <button
+            type="button"
+            class="control-btn play-btn"
+            :title="player.isPlaying.value ? '暂停' : '播放'"
+            :aria-label="player.isPlaying.value ? '暂停' : '播放'"
+            :disabled="!player.currentTrack.value"
+            @click="player.togglePlay"
+          >
+            <svg v-if="!player.isPlaying.value" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path fill="currentColor" d="M8 5v14l11-7z" />
+            </svg>
+            <svg v-else viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z" />
+            </svg>
+          </button>
 
-            <div class="track-info">
-              <div class="track-name">{{ player.currentTrack.value?.title || '音乐加载中' }}</div>
-              <div class="track-artist">
-                {{ player.currentTrack.value?.artist || '稍候片刻' }}
-                <template v-if="player.currentTrack.value?.album">
-                  · {{ player.currentTrack.value.album }}
-                </template>
-              </div>
-            </div>
-
-            <div class="inline-controls">
-              <button
-                type="button"
-                class="control-btn"
-                title="上一曲"
-                aria-label="上一曲"
-                :disabled="!player.currentTrack.value"
-                @click="player.previousTrack"
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                  <path fill="currentColor" d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z" />
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                class="control-btn play-btn"
-                :title="player.isPlaying.value ? '暂停' : '播放'"
-                :aria-label="player.isPlaying.value ? '暂停' : '播放'"
-                :disabled="!player.currentTrack.value"
-                @click="player.togglePlay"
-              >
-                <svg v-if="!player.isPlaying.value" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                  <path fill="currentColor" d="M8 5v14l11-7z" />
-                </svg>
-                <svg v-else viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                  <path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z" />
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                class="control-btn"
-                title="下一曲"
-                aria-label="下一曲"
-                :disabled="!player.currentTrack.value"
-                @click="player.nextTrack"
-              >
-                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                  <path fill="currentColor" d="M16 6h2v12h-2V6zM6 6l8.5 6L6 18V6z" />
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                class="control-btn"
-                :class="{ active: player.loopMode.value !== 'none' }"
-                :title="player.loopModeText.value"
-                :aria-label="player.loopModeText.value"
-                @click="player.toggleLoop"
-              >
-                <svg v-if="player.loopMode.value === 'one'" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-                  <path fill="currentColor" d="M7 7h7v3l4-4-4-4v3H5v6h2V7zm10 10H10v-3l-4 4 4 4v-3h9v-6h-2v4zM12 9h2v6h-2z" />
-                </svg>
-                <svg v-else viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
-                  <path fill="currentColor" d="M7 7h7v3l4-4-4-4v3H5v6h2V7zm10 10H10v-3l-4 4 4 4v-3h9v-6h-2v4z" />
-                </svg>
-              </button>
-            </div>
+          <div class="now-row__info">
+            <span class="now-row__title">{{ player.currentTrack.value?.title || '音乐加载中' }}</span>
+            <span class="now-row__artist">{{ player.currentTrack.value?.artist || '稍候片刻' }}</span>
           </div>
 
-          <div class="progress-section">
-            <span class="time-current">{{ formatTime(player.currentTime.value) }}</span>
-            <div class="progress-bar" @click="handleProgressClick">
-              <div class="progress-loaded" :style="{ width: player.loadedProgress.value + '%' }"></div>
-              <div class="progress-played" :style="{ width: player.playedProgress.value + '%' }">
-                <span class="progress-thumb"></span>
-              </div>
-            </div>
-            <span class="time-duration">{{ formatTime(player.duration.value) }}</span>
-          </div>
+          <button
+            type="button"
+            class="control-btn"
+            :class="{ active: player.loopMode.value !== 'none' }"
+            :title="player.loopModeText.value"
+            :aria-label="player.loopModeText.value"
+            @click="player.toggleLoop"
+          >
+            <svg v-if="player.loopMode.value === 'one'" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+              <path fill="currentColor" d="M7 7h7v3l4-4-4-4v3H5v6h2V7zm10 10H10v-3l-4 4 4 4v-3h9v-6h-2v4zM12 9h2v6h-2z" />
+            </svg>
+            <svg v-else viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+              <path fill="currentColor" d="M7 7h7v3l4-4-4-4v3H5v6h2V7zm10 10H10v-3l-4 4 4 4v-3h9v-6h-2v4z" />
+            </svg>
+          </button>
         </div>
 
         <!-- 播放列表 / 歌词视窗 -->
@@ -282,12 +225,6 @@ const activeTab = ref('playlist')
 
 const player = useSharedAudioPlayer()
 
-function handleProgressClick(e) {
-  const rect = e.currentTarget.getBoundingClientRect()
-  const percent = (e.clientX - rect.left) / rect.width
-  player.seek(percent)
-}
-
 onMounted(() => {
   player.mountConsumer(nativeAudio.value)
 })
@@ -337,34 +274,40 @@ onUnmounted(() => {
 
 .music-section__title-group {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
 }
 
 .music-section__badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.36rem 0.85rem;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  gap: 0.6rem;
   color: var(--fg-muted);
-  font-size: 0.76rem;
-  font-weight: 500;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  font-style: italic;
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.music-section__badge::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
 }
 
 .music-section__header h2 {
   margin: 0;
   font-size: clamp(1.35rem, 2.6vw, 1.75rem);
-  font-weight: 600;
-  line-height: 1.15;
+  font-weight: 500;
+  line-height: 1.2;
   color: #ffffff;
-  letter-spacing: -0.015em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .music-section__tabs {
@@ -413,75 +356,39 @@ onUnmounted(() => {
   gap: 12px;
 }
 
-/* 无边框平铺控制区，仅保留底部柔和分割线 */
-.player-stage {
+/* 当前曲目状态行：只提供播放/暂停与循环，完整控制在首屏播放器 */
+.now-row {
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  gap: 11px;
+  align-items: center;
+  gap: 10px;
   padding-bottom: 13px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.now-playing {
-  display: flex;
-  gap: 11px;
-  align-items: center;
-}
-
-.track-cover {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
-}
-
-.track-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.track-cover svg {
-  color: var(--fg-subtle);
-  opacity: 0.6;
-}
-
-.track-info {
+.now-row__info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.track-name {
+.now-row__title {
   font-size: 0.92rem;
   font-weight: 600;
   color: #ffffff;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-bottom: 2px;
 }
 
-.track-artist {
+.now-row__artist {
   font-size: 0.76rem;
   color: var(--fg-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.inline-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
 }
 
 .control-btn {
@@ -528,67 +435,6 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.24);
   border-color: rgba(255, 255, 255, 0.45);
   transform: scale(1.04);
-}
-
-.progress-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.time-current,
-.time-duration {
-  font-size: 0.72rem;
-  color: var(--fg-subtle);
-  font-variant-numeric: tabular-nums;
-  min-width: 32px;
-}
-
-.time-duration {
-  text-align: right;
-}
-
-.progress-bar {
-  flex: 1;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  cursor: pointer;
-  position: relative;
-}
-
-.progress-loaded {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: inherit;
-  transition: width 0.3s ease;
-}
-
-.progress-played {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  background: #ffffff;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.65);
-  border-radius: inherit;
-  transition: width 0.1s linear;
-}
-
-.progress-thumb {
-  position: absolute;
-  right: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  background: #ffffff;
-  border-radius: 50%;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
-  pointer-events: none;
 }
 
 .player-pane {

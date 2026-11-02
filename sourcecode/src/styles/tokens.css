@@ -40,10 +40,10 @@
   --danger: rgba(254, 202, 202, 0.9);
   --danger-strong: #fca5a5;
 
-  /* 首页链接卡与图标块：受光面到背光面的自然微光微渐变 */
-  --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.03) 100%);
-  --card-bg-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.105) 0%, rgba(255, 255, 255, 0.055) 100%);
-  --card-border: rgba(255, 255, 255, 0.13);
+  /* 首页链接卡与图标块：作为玻璃面板内的内层元素，保持近乎扁平，仅悬停时提亮 */
+  --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.025) 100%);
+  --card-bg-hover: linear-gradient(145deg, rgba(255, 255, 255, 0.095) 0%, rgba(255, 255, 255, 0.055) 100%);
+  --card-border: rgba(255, 255, 255, 0.07);
   --card-highlight-bg: linear-gradient(145deg, rgba(255, 250, 235, 0.09) 0%, rgba(255, 250, 235, 0.04) 100%);
   --card-highlight-bg-hover: linear-gradient(145deg, rgba(255, 250, 235, 0.14) 0%, rgba(255, 250, 235, 0.075) 100%);
   --gold-line: rgba(253, 230, 138, 0.45);
@@ -129,6 +129,8 @@
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
     'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  /* 衬线体：首屏时钟与标语、各分区眉标共用，保持两屏气质一致 */
+  --font-serif: 'Bodoni MT', Didot, Georgia, 'Times New Roman', serif;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

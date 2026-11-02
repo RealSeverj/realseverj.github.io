@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import LinkSection from '../components/LinkSection.vue'
+import ArticleFeed from '../components/ArticleFeed.vue'
 import MusicPlayer from '../components/MusicPlayer.vue'
 import ModalFrame from '../components/ModalFrame.vue'
 import { decorateLinks } from '../lib/links.js'
@@ -24,7 +25,6 @@ const restSections = computed(() => sections.value.slice(1))
           class="top-bento__site"
           :badge="primarySection.badge"
           :title="primarySection.title"
-          :description="primarySection.description"
           :links="decorateLinks(primarySection.links)"
           @link-click="handleLinkClick"
         />
@@ -38,16 +38,17 @@ const restSections = computed(() => sections.value.slice(1))
         </div>
       </div>
 
-      <LinkSection
-        v-for="sec in restSections"
-        :key="sec.id || sec.title"
-        :id="sec.id"
-        :badge="sec.badge"
-        :title="sec.title"
-        :description="sec.description"
-        :links="decorateLinks(sec.links)"
-        @link-click="handleLinkClick"
-      />
+      <template v-for="sec in restSections" :key="sec.id || sec.title">
+        <LinkSection
+          :id="sec.id"
+          :badge="sec.badge"
+          :title="sec.title"
+          :links="decorateLinks(sec.links)"
+          @link-click="handleLinkClick"
+        >
+          <ArticleFeed v-if="sec.id === 'articles'" :articles="sec.links" />
+        </LinkSection>
+      </template>
     </section>
 
     <ModalFrame v-if="modalSrc" :src="modalSrc" @close="modalSrc = ''" />

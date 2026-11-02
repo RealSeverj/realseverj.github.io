@@ -12,6 +12,10 @@ export function usePetalWind(containerRef) {
   let rafId = 0
   let isReduced = false
 
+  function startLoop() {
+    if (!rafId) rafId = requestAnimationFrame(updateWind)
+  }
+
   function onPointerMove(e) {
     if (isReduced) return
     const now = performance.now()
@@ -22,6 +26,7 @@ export function usePetalWind(containerRef) {
       // 限制微风最大偏转在 ±16px，保持绝对克制优雅
       targetWindX = Math.max(-16, Math.min(16, (dx / dt) * 10))
       targetWindY = Math.max(-12, Math.min(12, (dy / dt) * 8))
+      startLoop()
     }
     lastX = e.clientX
     lastY = e.clientY
@@ -38,7 +43,12 @@ export function usePetalWind(containerRef) {
       containerRef.value.style.setProperty('--breeze-wind-x', `${windX.toFixed(2)}px`)
       containerRef.value.style.setProperty('--breeze-wind-y', `${windY.toFixed(2)}px`)
     }
-    rafId = requestAnimationFrame(updateWind)
+
+    if (Math.abs(windX) > 0.02 || Math.abs(windY) > 0.02 || Math.abs(targetWindX) > 0.02 || Math.abs(targetWindY) > 0.02) {
+      rafId = requestAnimationFrame(updateWind)
+    } else {
+      rafId = 0
+    }
   }
 
   onMounted(() => {
@@ -46,12 +56,15 @@ export function usePetalWind(containerRef) {
     isReduced = mediaQuery.matches
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     if (!isReduced) {
-      rafId = requestAnimationFrame(updateWind)
+      startLoop()
     }
   })
 
   onUnmounted(() => {
     window.removeEventListener('pointermove', onPointerMove)
-    if (rafId) cancelAnimationFrame(rafId)
+    if (rafId) {
+      cancelAnimationFrame(rafId)
+      rafId = 0
+    }
   })
 }

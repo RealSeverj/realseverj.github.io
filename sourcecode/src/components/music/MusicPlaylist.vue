@@ -219,6 +219,14 @@ function toggleOpen() {
   justify-content: center; 
   width: 18px; 
   color: var(--fg-subtle); 
+  transition: opacity var(--dur-fast) ease;
+}
+
+/* 有悬停能力的设备上，播放三角仅在悬停或键盘聚焦时出现，减少列表噪音 */
+@media (hover: hover) {
+  .item-duration { opacity: 0; }
+  .playlist-item:hover .item-duration,
+  .playlist-item:focus-visible .item-duration { opacity: 1; }
 }
 
 .item-playing { 

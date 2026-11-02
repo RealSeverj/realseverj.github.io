@@ -5,23 +5,24 @@
         <span v-if="badge" class="link-section__badge">{{ badge }}</span>
         <h2 :id="headingId">{{ title }}</h2>
       </div>
-      <p v-if="description" class="link-section__description">{{ description }}</p>
     </header>
-    <div class="link-section__grid">
-      <LinkCard
-        v-for="link in links"
-        :key="link.href"
-        :label="link.label || link.title"
-        :href="link.href"
-        :icon="link.icon"
-        :emoji="link.emoji"
-        :image="link.image"
-        :description="link.description"
-        :highlight="link.highlight"
-        :intercept="shouldIntercept(link.href)"
-        @open="onLinkClick(link)"
-      />
-    </div>
+    <slot>
+      <div class="link-section__grid">
+        <LinkCard
+          v-for="link in links"
+          :key="link.href"
+          :label="link.label || link.title"
+          :href="link.href"
+          :icon="link.icon"
+          :emoji="link.emoji"
+          :image="link.image"
+          :description="link.description"
+          :highlight="link.highlight"
+          :intercept="shouldIntercept(link.href)"
+          @open="onLinkClick(link)"
+        />
+      </div>
+    </slot>
   </section>
 </template>
 
@@ -38,10 +39,6 @@ const props = defineProps({
   title: {
     type: String,
     required: true
-  },
-  description: {
-    type: String,
-    default: ''
   },
   badge: {
     type: String,
@@ -92,43 +89,41 @@ function onLinkClick(link) {
 
 .link-section__title-group {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.85rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
 }
 
+/* 眉标：无边框衬线斜体，呼应首屏的 A Place No One Has Found */
 .link-section__badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.36rem 0.85rem;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  gap: 0.6rem;
   color: var(--fg-muted);
-  font-size: 0.76rem;
-  font-weight: 500;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  font-style: italic;
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.link-section__badge::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
 }
 
 h2 {
   margin: 0;
   font-size: clamp(1.4rem, 3.2vw, 1.9rem);
-  font-weight: 600;
-  line-height: 1.15;
+  font-weight: 500;
+  line-height: 1.2;
   color: #ffffff;
-  letter-spacing: -0.015em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-}
-
-.link-section__description {
-  margin: 0;
-  max-width: 54ch;
-  color: var(--fg-muted);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .link-section__grid {
