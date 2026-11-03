@@ -120,18 +120,16 @@ useSceneScroll(root, opening, content)
   align-items: center;
   gap: 4px;
   padding: 4px 6px;
-  /* 玻璃上叠一层深青色着色：亮背景下提供对比度，暗背景下几乎不可见，保持原有的通透感 */
+  /* 不再使用背景模糊：靠更深一点的青色着色托住亮背景下的文字对比度 */
   background:
     linear-gradient(
       160deg,
       rgba(255, 255, 255, calc(0.14 - var(--scene-progress) * 0.09)) 0%,
       rgba(255, 255, 255, calc(0.04 - var(--scene-progress) * 0.02)) 100%
     ),
-    rgba(14, 40, 58, calc(0.36 - var(--scene-progress) * 0.14));
+    rgba(14, 60, 80, calc(0.24 - var(--scene-progress) * 0.18));
   border: 1px solid rgba(255, 255, 255, calc(0.3 - var(--scene-progress) * 0.14));
   border-radius: var(--radius-pill);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
   box-shadow:
     inset 0 1px 1px 0 rgba(255, 255, 255, calc(0.34 - var(--scene-progress) * 0.14)),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05),
@@ -150,7 +148,7 @@ useSceneScroll(root, opening, content)
   position: relative;
   padding: 6px 15px;
   border-radius: var(--radius-pill);
-  color: rgb(220, 245, 253);
+  color: rgb(231, 245, 249);
   font-weight: 500;
   letter-spacing: 0.03em;
   white-space: nowrap;

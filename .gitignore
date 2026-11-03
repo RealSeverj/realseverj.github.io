@@ -1,5 +1,6 @@
-﻿# 构建产物需要提交到仓库：GitHub Pages 从 main 分支的根目录直接发布，
+# 构建产物需要提交到仓库：GitHub Pages 从 main 分支的根目录直接发布，
 # 忽略 /assets 会导致线上拿不到 JS/CSS（只剩空白页）。
 node_modules/
 sourcecode/node_modules/
 sourcecode/dist/
+sourcecode/.env.deploy.local

@@ -67,9 +67,7 @@ function onLinkClick(link) {
   padding: clamp(1.6rem, 3.5vw, 2.4rem) clamp(1.2rem, 3.5vw, 2.4rem);
   border-radius: var(--radius-2xl);
   border: 1px solid var(--border);
-  background: var(--surface-flat);
-  backdrop-filter: var(--blur-lg) saturate(130%);
-  -webkit-backdrop-filter: var(--blur-lg) saturate(130%);
+  background: var(--panel-bg);
   box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   transition: transform var(--dur-base) ease, box-shadow var(--dur-base) ease, border-color var(--dur-base) ease;
 }

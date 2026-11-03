@@ -82,8 +82,6 @@ const props = defineProps({
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  backdrop-filter: var(--blur-sm);
-  -webkit-backdrop-filter: var(--blur-sm);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
@@ -133,8 +131,6 @@ h1 {
   font-weight: 500;
   letter-spacing: 0.02em;
   text-decoration: none;
-  backdrop-filter: var(--blur-md);
-  -webkit-backdrop-filter: var(--blur-md);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   transition: transform var(--dur-base) ease, box-shadow var(--dur-base) ease, background var(--dur-base) ease, border-color var(--dur-base) ease;
   position: relative;

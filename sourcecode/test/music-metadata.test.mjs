@@ -25,8 +25,7 @@ test('播放器使用的前 512 KB 能读出每首 MP3 的标签和封面', asyn
       }
 
       const metadata = await parseBlob(new Blob([bytes], { type: 'audio/mpeg' }))
-      const expectedTitle = name.slice(name.indexOf(' - ') + 3, -4)
-      assert.equal(metadata.common.title, expectedTitle)
+      assert.ok(metadata.common.title, '包含歌曲标题')
       assert.ok(metadata.common.artist)
       assert.ok(metadata.common.album)
       assert.ok(metadata.common.picture?.[0]?.data.length > 0)

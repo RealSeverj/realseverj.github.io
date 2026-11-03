@@ -15,7 +15,10 @@
     "test": "node --test",
     "preview": "vite preview",
     "sync:root": "node ./scripts/deploy.mjs",
+    "sync:remote": "node ./scripts/deploy-remote.mjs",
     "deploy": "npm run build && npm run sync:root",
+    "deploy:remote": "npm run deploy && npm run sync:remote",
+    "deploy:quick": "npm run deploy && node ./scripts/deploy-remote.mjs --quick",
     "serve:root": "node ./scripts/local-server.mjs -r .. -H 127.0.0.1 -p 5500",
     "deploy:serve": "npm run deploy && npm run serve:root"
   },

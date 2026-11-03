@@ -17,7 +17,7 @@ export async function buildPlaylist(musicDir) {
   const audioFiles = entries
     .filter(e => e.isFile() && /\.(mp3|flac|wav|ogg)$/i.test(e.name))
     .map(e => e.name)
-    .sort()
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
 
   const lrcSet = new Set(
     entries

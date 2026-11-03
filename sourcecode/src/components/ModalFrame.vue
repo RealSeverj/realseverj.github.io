@@ -110,8 +110,6 @@ const { win, closeBtn, winStyle, displayUrl, loading, blocked, onLoad } = useMod
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at center, rgba(16, 22, 38, 0.72) 0%, rgba(6, 9, 16, 0.86) 100%);
-  backdrop-filter: blur(14px) saturate(130%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%);
   animation: modal-fade-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -125,8 +123,6 @@ const { win, closeBtn, winStyle, displayUrl, loading, blocked, onLoad } = useMod
   flex-direction: column;
   background: linear-gradient(165deg, rgba(20, 26, 46, 0.9) 0%, rgba(10, 14, 26, 0.95) 100%);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  backdrop-filter: var(--blur-lg) saturate(135%);
-  -webkit-backdrop-filter: var(--blur-lg) saturate(135%);
   box-shadow:
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05),
@@ -286,8 +282,6 @@ const { win, closeBtn, winStyle, displayUrl, loading, blocked, onLoad } = useMod
   place-items: center;
   padding: var(--space-md);
   background: rgba(9, 12, 22, 0.78);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .loader-card {

@@ -245,9 +245,7 @@ onUnmounted(() => {
   padding: clamp(1.5rem, 3vw, 2.1rem);
   border-radius: var(--radius-2xl);
   border: 1px solid var(--border);
-  background: var(--surface-flat);
-  backdrop-filter: var(--blur-lg) saturate(130%);
-  -webkit-backdrop-filter: var(--blur-lg) saturate(130%);
+  background: var(--panel-bg);
   box-shadow:
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05);
@@ -469,11 +467,12 @@ onUnmounted(() => {
 .ambient-player {
   position: relative;
   padding: 12px 18px 13px;
-  background: linear-gradient(145deg, rgba(240, 250, 255, 0.14) 0%, rgba(210, 236, 248, 0.06) 100%);
+  /* 不使用背景模糊，用一层很淡的深色底托住文字 */
+  background:
+    linear-gradient(145deg, rgba(240, 250, 255, 0.14) 0%, rgba(210, 236, 248, 0.06) 100%),
+    rgba(26, 73, 104, 0.24);
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 20px;
-  backdrop-filter: blur(8px) saturate(108%);
-  -webkit-backdrop-filter: blur(8px) saturate(108%);
   box-shadow:
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.32),
     inset 0 0 0 1px rgba(255, 255, 255, 0.06),

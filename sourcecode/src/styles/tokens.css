@@ -61,6 +61,10 @@
   --surface: linear-gradient(145deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.035) 100%);
   --surface-raised: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
   --surface-flat: linear-gradient(160deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  /* 大面板（站点入口 / 音乐盒 / 朋友 / 文章）：不做背景模糊，靠深色底色托住文字对比度 */
+  --panel-bg:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.025) 100%),
+    rgba(10, 24, 36, 0.28);
   --surface-header: rgba(255, 255, 255, 0.045);
   --surface-item: rgba(255, 255, 255, 0.04);
   --surface-item-hover: rgba(255, 255, 255, 0.08);
@@ -143,8 +147,6 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  backdrop-filter: var(--blur-md) saturate(135%);
-  -webkit-backdrop-filter: var(--blur-md) saturate(135%);
   box-shadow: var(--shadow-card);
   transition: border-color var(--dur-base) ease, box-shadow var(--dur-base) ease, background var(--dur-base) ease;
 }
