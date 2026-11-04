@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import BackgroundStage from './components/BackgroundStage.vue'
 import PetalBreeze from './components/PetalBreeze.vue'
+import CustomCursor from './components/CustomCursor.vue'
 import MusicPlayer from './components/MusicPlayer.vue'
 import WeatherTime from './components/WeatherTime.vue'
 import HomeView from './views/HomeView.vue'
@@ -22,6 +23,7 @@ useSceneScroll(root, opening, content)
   <div ref="root" class="page">
     <BackgroundStage :image="wallpaper.image" :blur="wallpaper.blur" :overlay="wallpaper.overlay" />
     <PetalBreeze />
+    <CustomCursor />
     <a class="skip-link" href="#discover">跳到主页内容</a>
 
     <header class="header">
